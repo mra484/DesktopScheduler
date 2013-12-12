@@ -13,6 +13,8 @@
  *   
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   
+ * Class for managing the list of dates and related data
  */
 
 import java.awt.BorderLayout;
@@ -26,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionListener;
 
 public class Lister extends JScrollPane{
 	
@@ -33,12 +36,14 @@ public class Lister extends JScrollPane{
 	private HashMap<Short, Entry> dateList = new HashMap<Short, Entry>(); 
 	private JList<String> list;
 	private HashMap<Integer, String> dateIndex = new HashMap<Integer, String>();
+	private HashSet<Integer> spaceIndex = new HashSet<Integer>();
 	private Entry current = new Entry("1/1/1");
 	
 	public Lister(JList<String> jlist){
 		super(jlist);
 		list = jlist;
-		
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setSelectionModel(new DisableSelectionModel());
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(290, 500));
 	}	
@@ -86,9 +91,24 @@ public class Lister extends JScrollPane{
 			m.add(i++, a.getName());
 			for(String b: a.getList())
 				m.add(i++, b);
+			spaceIndex.add(i);
 			m.add(i++, " ");
 		}
 		list.setModel(m);
+		
+	}
+	
+	//disables selection of empty space and date labels
+	public class DisableSelectionModel extends DefaultListSelectionModel{
+		private static final long serialVersionUID = 1L;
+		
+		@Override
+		public void setSelectionInterval(int index0, int index1){
+			if( !dateIndex.containsKey(index0) && !spaceIndex.contains(index0)){
+				super.setSelectionInterval(index0, index0);
+				
+			}
+		}
 		
 	}
 }
