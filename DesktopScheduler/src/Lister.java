@@ -51,6 +51,11 @@ public class Lister extends JScrollPane{
 		
 		
 	}
+	
+	public HashMap<Short, Entry> getList(){
+		return dateList;
+	}
+	
 	public void updateList(){
 		DefaultListModel<String> m = new DefaultListModel<String>();
 		int i = 0;

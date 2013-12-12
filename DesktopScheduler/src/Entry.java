@@ -5,7 +5,7 @@ public class Entry {
 			"September", "October", "November", "December"};	
 	private short date;
 	private String dateName = "";
-	private int format = 0;
+	public static int format = 0;
 	public static final int DMY = 0;
 	public static final int DYM = 1;
 	public static final int MDY = 2;
@@ -42,7 +42,7 @@ public class Entry {
 			split = dateString.split(" ");
 		
 		//convert the date into a value depending on the input format
-		switch( format ){
+		switch( Entry.format ){
 		case DMY:
 			temp = (short) Integer.parseInt(split[0]);
 			if( option == 0)
