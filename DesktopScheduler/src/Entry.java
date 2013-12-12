@@ -38,6 +38,8 @@ public class Entry {
 			split = dateString.split("/");
 		else if( dateString.contains("\\") )
 			split = dateString.split("\\");
+		else if( dateString.contains("||"))
+			split = dateString.split("||");
 		else
 			split = dateString.split(" ");
 		
@@ -125,7 +127,7 @@ public class Entry {
 	
 	private short parseMonth(String month, int option){
 		byte monthValue = -1;
-		month.toLowerCase().replace(" ", "").replace(",", "");
+		month = month.toLowerCase().replace(" ", "").replace(",", "");
 		
 		if( month.contains("oc")  || month.contains("10") )
 			monthValue = 9;

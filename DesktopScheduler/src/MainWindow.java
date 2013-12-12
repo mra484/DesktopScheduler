@@ -10,7 +10,8 @@ public class MainWindow extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private JList<String> list = new JList<String>();
 	private Lister lister = new Lister(list);
-	private ControlPanel controls = new ControlPanel(lister);
+	private FileHandler filer = new FileHandler(lister);
+	private ControlPanel controls = new ControlPanel(lister, filer);
 	private GridBagConstraints c = new GridBagConstraints();
 	
 	public MainWindow(){

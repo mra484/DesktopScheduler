@@ -19,6 +19,7 @@ public class ControlPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	private Lister list;
+	private FileHandler filer;
 	private JButton add = new JButton("Create New Entry");
 	private JButton delete = new JButton("Delete Selected Entry");
 	private JTextField date = new JTextField();
@@ -30,8 +31,9 @@ public class ControlPanel extends JPanel{
 	private ActionHandler action = new ActionHandler();
 	private GridBagConstraints c = new GridBagConstraints();
 	
-	public ControlPanel(Lister a){
+	public ControlPanel(Lister a, FileHandler b){
 		list = a;
+		filer = b;
 		setLayout(new GridBagLayout());
 		arrange();
 		add.addActionListener(action);
@@ -76,6 +78,10 @@ public class ControlPanel extends JPanel{
 			if( e.getSource() == add ){
 				list.add(date.getText(), memo.getText());
 			}
+			if( e.getSource() == delete) {
+				list.delete();
+			}
+			filer.saveData();
 		}
 	}
 }

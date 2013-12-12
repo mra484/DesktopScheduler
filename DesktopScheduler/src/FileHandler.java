@@ -17,6 +17,7 @@ public class FileHandler {
 	private OutputStreamWriter osw;
 	private BufferedWriter writer;
 	private Lister list;
+	private String separator = "=";
 	
 	public FileHandler(Lister a){
 		list = a;
@@ -68,7 +69,7 @@ public class FileHandler {
 			Entry.format = Integer.parseInt(input);
 			while(reader.ready()){
 				input = reader.readLine();
-				split = input.split("||");
+				split = input.split(separator);
 				list.add(split[0], split[1]);
 			}
 			reader.close();
@@ -88,7 +89,7 @@ public class FileHandler {
 			writer.newLine();
 			for(Entry a: list.getList().values()){
 				for(String b: a.getList()){
-					writer.write(String.format("%s || %s", a.getDate(), b));
+					writer.write(String.format("%s%s%s", a.getName(), separator, b));
 					writer.newLine();
 				}
 			}

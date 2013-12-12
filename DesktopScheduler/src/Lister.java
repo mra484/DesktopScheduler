@@ -21,19 +21,24 @@ import java.awt.Dimension;
 import java.util.*;
 
 import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.ListSelectionModel;
 
 public class Lister extends JScrollPane{
 	
 	private static final long serialVersionUID = 1L;
 	private HashMap<Short, Entry> dateList = new HashMap<Short, Entry>(); 
 	private JList<String> list;
+	private HashMap<Integer, String> dateIndex = new HashMap<Integer, String>();
+	private Entry current = new Entry("1/1/1");
 	
-	public Lister(JList<String> list){
-		super(list);
-		this.list = list;
+	public Lister(JList<String> jlist){
+		super(jlist);
+		list = jlist;
+		
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(290, 500));
 	}	
@@ -47,8 +52,25 @@ public class Lister extends JScrollPane{
 			current = dateList.get(current.getDate());
 		current.add(data);
 		updateList();
-		return true;
+		return true;		
+	}
+	
+	public boolean delete(){
+		String data = list.getSelectedValue();
+		int index = list.getSelectedIndex();
+		if( data == "")
+			return false;
+
+		while(!dateIndex.containsKey(index))
+			index--;
 		
+		current = dateList.get(current.parseDate(dateIndex.get(index), 1));
+		current.getList().remove(data);
+		if( current.getList().size() == 0)
+			dateList.remove(current.parseDate(dateIndex.get(index), 1));
+		
+		updateList();
+		return true;		
 		
 	}
 	
@@ -60,11 +82,13 @@ public class Lister extends JScrollPane{
 		DefaultListModel<String> m = new DefaultListModel<String>();
 		int i = 0;
 		for(Entry a: dateList.values()){
+			dateIndex.put(i, a.getName());
 			m.add(i++, a.getName());
 			for(String b: a.getList())
 				m.add(i++, b);
 			m.add(i++, " ");
 		}
 		list.setModel(m);
+		
 	}
 }
