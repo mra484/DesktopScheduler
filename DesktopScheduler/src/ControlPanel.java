@@ -12,10 +12,13 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ControlPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
+	private Lister list;
 	private JButton add = new JButton("Create New Entry");
 	private JButton delete = new JButton("Delete Selected Entry");
 	private JTextField date = new JTextField();
@@ -23,11 +26,16 @@ public class ControlPanel extends JPanel{
 	private JLabel dateLabel = new JLabel("Date:");
 	private JLabel memoLabel = new JLabel("Enter event information below:");
 	JScrollPane memoArea = new JScrollPane(memo);
+	
+	private ActionHandler action = new ActionHandler();
 	private GridBagConstraints c = new GridBagConstraints();
 	
-	public ControlPanel(){
+	public ControlPanel(Lister a){
+		list = a;
 		setLayout(new GridBagLayout());
 		arrange();
+		add.addActionListener(action);
+		delete.addActionListener(action);
 	}
 	
 	public void arrange(){
@@ -59,5 +67,15 @@ public class ControlPanel extends JPanel{
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.fill = GridBagConstraints.BOTH;
 		add(memoArea, c);
+	}
+	
+	private class ActionHandler implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			if( date.getText() == "" )
+				System.out.println("Please Enter a date");
+			if( e.getSource() == add ){
+				list.add(date.getText(), memo.getText());
+			}
+		}
 	}
 }

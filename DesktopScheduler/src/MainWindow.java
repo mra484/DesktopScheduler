@@ -8,9 +8,9 @@ import java.awt.GridBagConstraints;
 
 public class MainWindow extends JFrame{
 	private static final long serialVersionUID = 1L;
-	private JList<Entry> list = new JList<Entry>();
+	private JList<String> list = new JList<String>();
 	private Lister lister = new Lister(list);
-	private ControlPanel controls = new ControlPanel();
+	private ControlPanel controls = new ControlPanel(lister);
 	private GridBagConstraints c = new GridBagConstraints();
 	
 	public MainWindow(){

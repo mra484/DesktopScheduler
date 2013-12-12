@@ -19,6 +19,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.*;
+
+import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
@@ -26,13 +28,38 @@ import javax.swing.JList;
 public class Lister extends JScrollPane{
 	
 	private static final long serialVersionUID = 1L;
-	private HashMap<Integer, Entry> dateList = new HashMap<Integer, Entry>(); 
-	private JScrollPane listWindow;
-	private JList<Entry> list;
+	private HashMap<Short, Entry> dateList = new HashMap<Short, Entry>(); 
+	private JList<String> list;
 	
-	public Lister(JList list){
+	public Lister(JList<String> list){
 		super(list);
+		this.list = list;
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(290, 500));
 	}	
+	
+	public boolean add(String date, String data){
+		Entry current = new Entry(date);
+		
+		if( !dateList.containsKey(current.getDate()) ){
+			dateList.put(current.getDate(), current);
+		}else 
+			current = dateList.get(current.getDate());
+		current.add(data);
+		updateList();
+		return true;
+		
+		
+	}
+	public void updateList(){
+		DefaultListModel<String> m = new DefaultListModel<String>();
+		int i = 0;
+		for(Entry a: dateList.values()){
+			m.add(i++, a.getName());
+			for(String b: a.getList())
+				m.add(i++, b);
+			m.add(i++, " ");
+		}
+		list.setModel(m);
+	}
 }
