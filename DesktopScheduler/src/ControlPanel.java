@@ -23,9 +23,11 @@ public class ControlPanel extends JPanel{
 	private JButton add = new JButton("Create New Entry");
 	private JButton delete = new JButton("Delete Selected Entry");
 	private JTextField date = new JTextField();
+	private JTextField title = new JTextField();
 	private JTextArea memo = new JTextArea(4, 4);
 	private JLabel dateLabel = new JLabel("Date:");
-	private JLabel memoLabel = new JLabel("Enter event information below:");
+	private JLabel titleLabel = new JLabel("Enter event name below:");
+	private JLabel memoLabel = new JLabel("Enter additional information below:");
 	JScrollPane memoArea = new JScrollPane(memo);
 	
 	private ActionHandler action = new ActionHandler();
@@ -63,9 +65,17 @@ public class ControlPanel extends JPanel{
 		
 		c.gridy = 2;
 		c.gridwidth = GridBagConstraints.REMAINDER;
-		add(memoLabel, c);
+		add(titleLabel, c);
 		
 		c.gridy = 3;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		add(title, c);
+		
+		c.gridy = 4;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		add(memoLabel, c);
+		
+		c.gridy = 5;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.fill = GridBagConstraints.BOTH;
 		add(memoArea, c);

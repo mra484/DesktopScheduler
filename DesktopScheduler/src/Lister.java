@@ -49,7 +49,7 @@ public class Lister extends JScrollPane{
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setSelectionModel(new DisableSelectionModel());
 		setBackground(Color.WHITE);
-		setPreferredSize(new Dimension(290, 500));
+		setPreferredSize(new Dimension(290, MainWindow.windowHeight - 235));
 	}	
 	
 	public boolean add(String date, String data){

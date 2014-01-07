@@ -5,9 +5,11 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.Toolkit;
 
 public class MainWindow extends JFrame{
 	private static final long serialVersionUID = 1L;
+	public static int windowHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 50;
 	private JList<String> list = new JList<String>();
 	private Lister lister = new Lister(list);
 	private FileHandler filer = new FileHandler(lister);
@@ -18,7 +20,7 @@ public class MainWindow extends JFrame{
 		super("Desktop Scheduler");
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(325, 700);
+		setSize(325, windowHeight);
 
 		setLayout(new GridBagLayout());
 		arrange();
