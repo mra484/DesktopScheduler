@@ -1,6 +1,8 @@
-import java.util.HashSet;
+import java.util.HashMap;
 public class Entry {
-	private HashSet<String> data = new HashSet<String>();
+	
+	//data will be stored using the event title as a key for the the dataentry object
+	private HashMap<String, DateEntry> data = new HashMap<String, DateEntry>();
 	private String[] dateList = {"January", "February", "March", "April", "May", "June", "July", "August",
 			"September", "October", "November", "December"};	
 	private short date;
@@ -17,12 +19,12 @@ public class Entry {
 		this.date = parseDate(date, 0);
 	}
 	
-	public boolean add(String info) {
-		return data.add(info);
+	public void add(String info) {
+		data.put(info, new DateEntry(date, info));
 	}
 	
-	public boolean remove(String info) {
-		return data.remove(info);
+	public void remove(String info) {
+		data.remove(info);
 	}
 	
 	public short parseDate(String dateString, int option){
@@ -168,7 +170,7 @@ public class Entry {
 		return dateName;
 	}
 	
-	public HashSet<String> getList(){
+	public HashMap<String, DateEntry> getList(){
 		return data;
 	}
 }

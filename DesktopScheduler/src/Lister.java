@@ -51,10 +51,13 @@ public class Lister extends JScrollPane{
 	public boolean add(String date, String data){
 		Entry current = new Entry(date);
 		
+		//create new date entry if not present
 		if( !dateList.containsKey(current.getDate()) ){
 			dateList.put(current.getDate(), current);
 		}else 
 			current = dateList.get(current.getDate());
+		
+		//retrieve date entry object and add the current information to it
 		current.add(data);
 		updateList();
 		return true;		
@@ -65,7 +68,8 @@ public class Lister extends JScrollPane{
 		int index = list.getSelectedIndex();
 		if( data == "")
 			return false;
-
+	
+		//move back selection until a non date-label entry is found - not needed?
 		while(!dateIndex.containsKey(index))
 			index--;
 		
@@ -89,8 +93,8 @@ public class Lister extends JScrollPane{
 		for(Entry a: dateList.values()){
 			dateIndex.put(i, a.getName());
 			m.add(i++, a.getName());
-			for(String b: a.getList())
-				m.add(i++, b);
+			for(DateEntry b: a.getList().values())
+				m.add(i++, b.toString());
 			spaceIndex.add(i);
 			m.add(i++, " ");
 		}

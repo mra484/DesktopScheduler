@@ -88,7 +88,7 @@ public class FileHandler {
 			writer.write("" + Entry.format);
 			writer.newLine();
 			for(Entry a: list.getList().values()){
-				for(String b: a.getList()){
+				for(DateEntry b: a.getList().values()){
 					writer.write(String.format("%s%s%s", a.getName(), separator, b));
 					writer.newLine();
 				}
