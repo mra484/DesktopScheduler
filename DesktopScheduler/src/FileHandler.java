@@ -70,11 +70,13 @@ public class FileHandler {
 			while(reader.ready()){
 				input = reader.readLine();
 				split = input.split(separator);
-				list.add(split[0], split[1]);
+				list.add(split[0], split[1], split[2]);
 			}
 			reader.close();
 		} catch (IOException e) {
 			System.out.println("Error reading from file");
+		} catch(NumberFormatException e) {
+			System.out.println("Error reading format integer");			
 		}
 	}
 	

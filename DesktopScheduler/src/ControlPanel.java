@@ -86,7 +86,7 @@ public class ControlPanel extends JPanel{
 			if( date.getText() == "" )
 				System.out.println("Please Enter a date");
 			if( e.getSource() == add ){
-				list.add(date.getText(), memo.getText());
+				list.add(date.getText(), title.getText(), memo.getText());
 			}
 			if( e.getSource() == delete) {
 				list.delete();

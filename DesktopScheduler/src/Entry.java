@@ -19,8 +19,8 @@ public class Entry {
 		this.date = parseDate(date, 0);
 	}
 	
-	public void add(String info) {
-		data.put(info, new DateEntry(date, info));
+	public void add(String title, String memo) {
+		data.put(title, new DateEntry(date, title, memo));
 	}
 	
 	public void remove(String info) {

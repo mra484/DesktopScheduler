@@ -2,10 +2,12 @@
 public class DateEntry implements Comparable<DateEntry>{
 	private short date;
 	private String title;
+	private String memo;
 	
-	public DateEntry(short newDate, String newTitle){
+	public DateEntry(short newDate, String newTitle, String newMemo){
 		date = newDate;
 		title = newTitle;
+		memo = newMemo;
 	}
 	
 	public short getDate(){
@@ -21,7 +23,7 @@ public class DateEntry implements Comparable<DateEntry>{
 	}
 	
 	public String toString(){
-		return getTitle();
+		return title + "=" + memo;
 	}
 
 	@Override

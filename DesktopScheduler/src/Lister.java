@@ -52,7 +52,7 @@ public class Lister extends JScrollPane{
 		setPreferredSize(new Dimension(290, MainWindow.windowHeight - 235));
 	}	
 	
-	public boolean add(String date, String data){
+	public boolean add(String date, String data, String memo){
 		Entry current = new Entry(date);
 		
 		//create new date entry if not present
@@ -62,7 +62,7 @@ public class Lister extends JScrollPane{
 			current = dateList.get(current.getDate());
 		
 		//retrieve date entry object and add the current information to it
-		current.add(data);
+		current.add(data, memo);
 		updateList();
 		return true;		
 	}
@@ -107,7 +107,7 @@ public class Lister extends JScrollPane{
 			
 			//retrieve date's event list and add to jlist
 			for(DateEntry b: a.getList().values()){
-				m.add(i++, b.toString());
+				m.add(i++, b.getTitle());
 				spaceIndex.remove(i);
 				dateIndex.remove(i);
 			}
