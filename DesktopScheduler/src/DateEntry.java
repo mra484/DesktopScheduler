@@ -27,6 +27,6 @@ public class DateEntry implements Comparable<DateEntry>{
 	@Override
 	public int compareTo(DateEntry a) {
 		
-		return date - a.getDate();
+		return a.getDate() - date;
 	}
 }

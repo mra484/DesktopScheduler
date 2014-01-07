@@ -33,8 +33,12 @@ import javax.swing.event.ListSelectionListener;
 public class Lister extends JScrollPane{
 	
 	private static final long serialVersionUID = 1L;
+	
+	//contains a list of dates with events
 	private HashMap<Short, Entry> dateList = new HashMap<Short, Entry>(); 
 	private JList<String> list;
+	
+	//contains a list of indexes containing a date or a space
 	private HashMap<Integer, String> dateIndex = new HashMap<Integer, String>();
 	private HashSet<Integer> spaceIndex = new HashSet<Integer>();
 	private Entry current = new Entry("1/1/1");
@@ -64,16 +68,21 @@ public class Lister extends JScrollPane{
 	}
 	
 	public boolean delete(){
+		
+		//retrieve the the title and index of the selected cell
 		String data = list.getSelectedValue();
 		int index = list.getSelectedIndex();
 		if( data == "")
 			return false;
 	
-		//move back selection until a non date-label entry is found - not needed?
+		//move back selection to find the date index
 		while(!dateIndex.containsKey(index))
 			index--;
 		
+		//using the date index that was just found, retrieve the date name then the date object
 		current = dateList.get(current.parseDate(dateIndex.get(index), 1));
+		
+		//remove from the event list of the date and delete date object if empty
 		current.getList().remove(data);
 		if( current.getList().size() == 0)
 			dateList.remove(current.parseDate(dateIndex.get(index), 1));
@@ -90,11 +99,20 @@ public class Lister extends JScrollPane{
 	public void updateList(){
 		DefaultListModel<String> m = new DefaultListModel<String>();
 		int i = 0;
+		
+		//retrieve and add date to jlist, record the index of the date
 		for(Entry a: dateList.values()){
 			dateIndex.put(i, a.getName());
 			m.add(i++, a.getName());
-			for(DateEntry b: a.getList().values())
+			
+			//retrieve date's event list and add to jlist
+			for(DateEntry b: a.getList().values()){
 				m.add(i++, b.toString());
+				spaceIndex.remove(i);
+				dateIndex.remove(i);
+			}
+			
+			//add space at the end of a date and record the index
 			spaceIndex.add(i);
 			m.add(i++, " ");
 		}

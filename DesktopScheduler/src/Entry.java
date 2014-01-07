@@ -28,6 +28,9 @@ public class Entry {
 	}
 	
 	public short parseDate(String dateString, int option){
+		//option = 0 for creating a new entry, includes date name as a string
+		//option = 1 for only calculating the (short) value of a date
+		
 		String[] split;
 		short date = 0;
 		short temp = 0;
