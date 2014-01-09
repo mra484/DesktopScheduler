@@ -18,6 +18,7 @@ public class MainWindow extends JFrame{
 	
 	public MainWindow(){
 		super("Desktop Scheduler");
+		lister.setControl(controls);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(325, windowHeight);
@@ -39,6 +40,10 @@ public class MainWindow extends JFrame{
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridy = 1;
 		add(controls, c);		
+	}
+	
+	public ControlPanel getControlPanel(){
+		return controls;
 	}
 	
 	public static void main(String[] args){

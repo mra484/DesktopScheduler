@@ -29,6 +29,7 @@ public class ControlPanel extends JPanel{
 	private JLabel titleLabel = new JLabel("Enter event name below:");
 	private JLabel memoLabel = new JLabel("Enter additional information below:");
 	JScrollPane memoArea = new JScrollPane(memo);
+	private Entry current = new Entry("1/1/1");
 	
 	private ActionHandler action = new ActionHandler();
 	private GridBagConstraints c = new GridBagConstraints();
@@ -81,16 +82,31 @@ public class ControlPanel extends JPanel{
 		add(memoArea, c);
 	}
 	
+	public void update(Entry currentDate, String currentTitle){
+		short dateValue;
+		
+		//change field values to the values of the selected entry
+		date.setText(currentDate.getName());
+		title.setText(currentTitle);
+		memo.setText(currentDate.getList().get(currentTitle).getMemo());
+	}
+	
 	private class ActionHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			if( date.getText() == "" )
-				System.out.println("Please Enter a date");
+			
 			if( e.getSource() == add ){
+				//ignore if date is empty
+				if( date.getText().compareTo("") == 0 ){
+					System.out.println("Please Enter a date");
+					return;
+				}
 				list.add(date.getText(), title.getText(), memo.getText());
 			}
+			
 			if( e.getSource() == delete) {
 				list.delete();
 			}
+			
 			filer.saveData();
 		}
 	}

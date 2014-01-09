@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class Lister extends JScrollPane{
@@ -43,6 +44,8 @@ public class Lister extends JScrollPane{
 	private HashSet<Integer> spaceIndex = new HashSet<Integer>();
 	private Entry current = new Entry("1/1/1");
 	
+	private ControlPanel control;
+	
 	public Lister(JList<String> jlist){
 		super(jlist);
 		list = jlist;
@@ -51,6 +54,10 @@ public class Lister extends JScrollPane{
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(290, MainWindow.windowHeight - 235));
 	}	
+	
+	public void setControl(ControlPanel a){
+		control = a;
+	}
 	
 	public boolean add(String date, String data, String memo){
 		Entry current = new Entry(date);
@@ -69,11 +76,13 @@ public class Lister extends JScrollPane{
 	
 	public boolean delete(){
 		
-		//retrieve the the title and index of the selected cell
-		String data = list.getSelectedValue();
+		//retrieve the the title and index of the selected cell, ignore if nothing is selected
 		int index = list.getSelectedIndex();
-		if( data == "")
+		if( index == -1 )
 			return false;
+		String data = list.getSelectedValue();
+//		if( data == "")
+//			return false;
 	
 		//move back selection to find the date index
 		while(!dateIndex.containsKey(index))
@@ -123,14 +132,26 @@ public class Lister extends JScrollPane{
 	//disables selection of empty space and date labels
 	public class DisableSelectionModel extends DefaultListSelectionModel{
 		private static final long serialVersionUID = 1L;
+		short dateValue;
+		String date;
 		
 		@Override
 		public void setSelectionInterval(int index0, int index1){
-			if( !dateIndex.containsKey(index0) && !spaceIndex.contains(index0)){
-				super.setSelectionInterval(index0, index0);
-				
-			}
+			
+			//ignore selection if it is an empty space or a date
+			if( dateIndex.containsKey(index0) || spaceIndex.contains(index0))
+				return;
+			
+			super.setSelectionInterval(index0, index0);
+			
+			//move back selection to find the date index
+			while(!dateIndex.containsKey(index0))
+				index0--;
+			
+			//update the display information for the current selection
+			date = list.getModel().getElementAt(index0);
+			dateValue = current.parseDate(date, 1);
+			control.update(dateList.get(dateValue), list.getSelectedValue());			
 		}
-		
 	}
 }

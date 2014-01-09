@@ -5,6 +5,10 @@ public class DateEntry implements Comparable<DateEntry>{
 	private String memo;
 	
 	public DateEntry(short newDate, String newTitle, String newMemo){
+		if(newTitle.compareTo("") == 0)
+			newTitle = " ";
+		if(newMemo.compareTo("") == 0)
+			newMemo = " ";
 		date = newDate;
 		title = newTitle;
 		memo = newMemo;
@@ -20,6 +24,10 @@ public class DateEntry implements Comparable<DateEntry>{
 	
 	public void setMemo(String newTitle){
 		title = newTitle;
+	}
+	
+	public String getMemo(){
+		return memo;
 	}
 	
 	public String toString(){
