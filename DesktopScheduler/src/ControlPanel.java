@@ -40,7 +40,6 @@ public class ControlPanel extends JPanel{
 	
 	private ActionHandler action = new ActionHandler();
 	private Mouse highlight = new Mouse();
-//	private Keys keyAction = new Keys();
 	private GridBagConstraints c = new GridBagConstraints();
 	
 	public ControlPanel(Lister a, FileHandler b){
@@ -50,10 +49,6 @@ public class ControlPanel extends JPanel{
 		date.addMouseListener(highlight);
 		title.addMouseListener(highlight);
 		memo.addMouseListener(highlight);
-		
-//		date.addKeyListener(keyAction);
-//		title.addKeyListener(keyAction);
-//		memo.addKeyListener(keyAction);
 		
 		setLayout(new GridBagLayout());
 		arrange();
@@ -170,15 +165,4 @@ public class ControlPanel extends JPanel{
 		}
 		
 	}
-	
-//	private class Keys implements KeyListener{
-//		public void keyPressed(KeyEvent e){
-//		}
-//		
-//		public void keyReleased(KeyEvent e){
-//		}
-//		
-//		public void keyTyped(KeyEvent e){
-//		}
-//	}
 }

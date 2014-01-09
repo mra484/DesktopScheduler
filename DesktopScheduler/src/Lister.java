@@ -20,6 +20,8 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.*;
 
 import javax.swing.DefaultListModel;
@@ -152,6 +154,28 @@ public class Lister extends JScrollPane{
 			date = list.getModel().getElementAt(index0);
 			dateValue = current.parseDate(date, 1);
 			control.update(dateList.get(dateValue), list.getSelectedValue());			
+		}
+	}
+	
+	private class KeyHandler implements KeyListener{
+		public void keyTyped(KeyEvent e){
+			
+		}
+		public void keyPressed(KeyEvent e){
+			
+			//add behavior for delete and enter
+			switch (e.getKeyCode()){
+			case KeyEvent.VK_DELETE:
+				
+				break;
+			case KeyEvent.VK_ENTER:
+				
+				break;
+			}
+		}
+		
+		public void keyReleased(KeyEvent e){
+			
 		}
 	}
 }
