@@ -17,21 +17,20 @@
  * Class for managing the list of dates and related data
  */
 
-import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class Lister extends JScrollPane{
 	
@@ -46,11 +45,14 @@ public class Lister extends JScrollPane{
 	private HashSet<Integer> spaceIndex = new HashSet<Integer>();
 	private Entry current = new Entry("1/1/1");
 	
+	private NewCellRenderer cr = new NewCellRenderer();
+	
 	private ControlPanel control;
 	
 	public Lister(JList<String> jlist){
 		super(jlist);
 		list = jlist;
+		list.setCellRenderer(cr);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setSelectionModel(new DisableSelectionModel());
 		setBackground(Color.WHITE);
@@ -129,6 +131,35 @@ public class Lister extends JScrollPane{
 		}
 		list.setModel(m);
 		
+	}
+	
+	public class NewCellRenderer extends DefaultListCellRenderer{
+		private static final long serialVersionUID = 1L;
+
+		public NewCellRenderer(){
+		}
+
+		@Override
+		public Component getListCellRendererComponent(
+				JList<? extends Object> list, Object value, int index,
+				boolean isSelected, boolean cellHasFocus) {
+			String indent = "   \u25cf ";
+			String textValue = value.toString();
+			Component comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			setText(indent + textValue);
+			
+			if( !dateIndex.containsKey(index) && !spaceIndex.contains(index) ){
+				setFont(new Font("small", Font.PLAIN, 11));
+				setText(indent + textValue);
+			} else
+				setText(textValue);
+			
+			if( isSelected ){
+				comp.setBackground(Color.CYAN);
+			}
+			return this;
+		}
+
 	}
 	
 	//disables selection of empty space and date labels
