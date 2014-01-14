@@ -21,6 +21,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
@@ -28,6 +30,7 @@ import java.util.*;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
+import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
@@ -46,12 +49,16 @@ public class Lister extends JScrollPane{
 	private Entry current = new Entry("1/1/1");
 	
 	private NewCellRenderer cr = new NewCellRenderer();
+	private KeyHandler key = new KeyHandler();
 	
 	private ControlPanel control;
+	private MainWindow main;
 	
-	public Lister(JList<String> jlist){
+	public Lister(JList<String> jlist, MainWindow mainWindow){
 		super(jlist);
+		main = mainWindow;
 		list = jlist;
+		list.addKeyListener(key);
 		list.setCellRenderer(cr);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setSelectionModel(new DisableSelectionModel());
@@ -197,10 +204,10 @@ public class Lister extends JScrollPane{
 			//add behavior for delete and enter
 			switch (e.getKeyCode()){
 			case KeyEvent.VK_DELETE:
-				
+				new DialogWindow(main, new ControlPanel(control, 0), DialogWindow.DELETE_WINDOW);
 				break;
 			case KeyEvent.VK_ENTER:
-				
+				new DialogWindow(main, new ControlPanel(control, 0), DialogWindow.EDIT_WINDOW);
 				break;
 			}
 		}
@@ -209,4 +216,6 @@ public class Lister extends JScrollPane{
 			
 		}
 	}
+	
+
 }

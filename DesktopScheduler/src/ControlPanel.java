@@ -38,10 +38,31 @@ public class ControlPanel extends JPanel{
 	JScrollPane memoArea = new JScrollPane(memo);
 	private Entry current = new Entry("1/1/1");
 	
+	private ControlPanel originalControl = this;
 	private ActionHandler action = new ActionHandler();
 	private Mouse highlight = new Mouse();
 	private GridBagConstraints c = new GridBagConstraints();
 	
+	public ControlPanel(ControlPanel a, int option){
+		originalControl = a;
+		list = a.getList();
+		filer = a.getFiler();
+		
+		date.addMouseListener(highlight);
+		title.addMouseListener(highlight);
+		memo.addMouseListener(highlight);
+		
+		setLayout(new GridBagLayout());
+		arrange();
+		add.addActionListener(action);
+		delete.addActionListener(action);
+		date.setText(a.getDate());
+		title.setText(a.getTitle());
+		memo.setText(a.getMemo());
+		remove(add);
+		remove(delete);
+		
+	}
 	public ControlPanel(Lister a, FileHandler b){
 		list = a;
 		filer = b;
@@ -55,7 +76,30 @@ public class ControlPanel extends JPanel{
 		add.addActionListener(action);
 		delete.addActionListener(action);
 	}
-	
+	public Lister getList(){
+		return list;
+	}
+	public FileHandler getFiler(){
+		return filer;
+	}
+	public String getDate(){
+		return date.getText();
+	}
+	public String getTitle(){
+		return title.getText();
+	}
+	public String getMemo(){
+		return memo.getText();
+	}
+	public void setDate(String a){
+		date.setText(a);
+	}
+	public void setTitle(String a){
+		title.setText(a);
+	}
+	public void setMemo(String a){
+		memo.setText(a);
+	}
 	public void arrange(){
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -95,6 +139,36 @@ public class ControlPanel extends JPanel{
 		add(memoArea, c);
 	}
 	
+	public void add(){
+		//add information in the controlpanel fields as a new event
+		//ignore if date is empty
+		if( date.getText().compareTo("") == 0 ){
+			System.out.println("Please Enter a date");
+			return;
+		}
+		list.add(date.getText(), title.getText(), memo.getText());	
+		updateControlPanel();
+	}
+	
+	public void delete(){
+		//deletes the selected entry
+		list.delete();
+		clearControlPanel();
+	}
+
+	public void updateControlPanel(){
+		//in the event of an edit being carried out, updates the original ControlPanel object
+		originalControl.setDate(date.getText());
+		originalControl.setTitle(title.getText());
+		originalControl.setMemo(memo.getText());
+	}
+	public void clearControlPanel(){
+		//clears the text fields
+		originalControl.setDate("");
+		originalControl.setTitle("");
+		originalControl.setMemo("");
+	}
+	
 	public void update(Entry currentDate, String currentTitle){
 		short dateValue;
 		
@@ -114,14 +188,9 @@ public class ControlPanel extends JPanel{
 			Object source = e.getSource();
 			
 			if( source == add ){
-				//ignore if date is empty
-				if( date.getText().compareTo("") == 0 ){
-					System.out.println("Please Enter a date");
-					return;
-				}
-				list.add(date.getText(), title.getText(), memo.getText());
+				add();
 			} else if( source == delete) {
-				list.delete();
+				delete();
 			}
 
 			filer.saveData();

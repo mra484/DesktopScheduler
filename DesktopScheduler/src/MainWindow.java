@@ -11,7 +11,7 @@ public class MainWindow extends JFrame{
 	private static final long serialVersionUID = 1L;
 	public static int windowHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 50;
 	private JList<String> list = new JList<String>();
-	private Lister lister = new Lister(list);
+	private Lister lister = new Lister(list, this);
 	private FileHandler filer = new FileHandler(lister);
 	private ControlPanel controls = new ControlPanel(lister, filer);
 	private GridBagConstraints c = new GridBagConstraints();
