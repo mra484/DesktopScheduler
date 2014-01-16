@@ -7,6 +7,9 @@ public class Entry {
 			"September", "October", "November", "December"};	
 	private short date;
 	private String dateName = "";
+	private String month = "";
+	private short day = 0;
+	private short year = 0;
 	public static int format = 0;
 	public static final int DMY = 0;
 	public static final int DYM = 1;
@@ -51,82 +54,103 @@ public class Entry {
 		//convert the date into a value depending on the input format
 		switch( Entry.format ){
 		case DMY:
+			//day
 			temp = (short) Integer.parseInt(split[0]);
-			if( option == 0)
-				dateName = dateName + (int) temp;
+			day = temp;
 			date += temp;
-
-			if( option == 0)
-				dateName = dateName + " ";
+			
+			//month
 			date += parseMonth(split[1], option);
+			
+			//year
 			temp = (short) Integer.parseInt(split[2]);
-			if( option == 0)
-				dateName = dateName + ", " + (int) temp;
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
 			break;
 		case DYM:
+			//day
 			temp = Byte.parseByte(split[0]);
-			if( option == 0)
-				dateName = dateName + (int) temp;
+			day = temp;
 			date += temp;
+			
+			//year
 			temp = Byte.parseByte(split[1]);
-			if( option == 0)
-				dateName = dateName + " " + (int) temp;
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
-			if( option == 0)
-				dateName = dateName + " ";
+			
+			//month
 			date += parseMonth(split[2], option);
 			break;
 		case MDY:
+			//month
 			date += parseMonth(split[0], option);
+			
+			//day
 			temp = Byte.parseByte(split[1]);
-			if( option == 0)
-				dateName = dateName + " " + (int) temp;
+			day = temp;
 			date += temp;
+			
+			//year
 			temp = Byte.parseByte(split[2]);
-			if( option == 0)
-				dateName = dateName +  ", " + (int) temp;
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
 			break;
 		case MYD:
+			//month
 			date += parseMonth(split[0], option);
+			
+			//year
 			temp = Byte.parseByte(split[1]);
-			if( option == 0)
-				dateName = dateName +  ", " + (int) temp;
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
+			
+			//day
 			temp += Byte.parseByte(split[2]);
-			if( option == 0)
-				dateName = dateName +  " " + (int) temp;
 			date += temp;
+			day = temp;
 			break;
 		case YDM:
+			//year
 			temp = Byte.parseByte(split[0]);
-			if( option == 0)
-				dateName = dateName + (int) temp + ",";
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
+			
+			//day
 			temp = Byte.parseByte(split[1]);
-			if( option == 0)
-				dateName = dateName + " " + (int) temp;
+			day = temp;
 			date += temp;
-			if( option == 0)
-				dateName = dateName + " ";
+			
+			//month
 			date += parseMonth(split[2], option);
 			break;
 		case YMD:
+			//year
 			temp = Byte.parseByte(split[0]);
-			if( option == 0)
-				dateName = dateName + ((int) temp) + ",";
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
-			if( option == 0)
-				dateName = dateName + " ";
+			
+			//month
 			date += parseMonth(split[1], option);
+			
+			//day
 			temp = Byte.parseByte(split[2]);
-			if( option == 0)
-				dateName = dateName +  " " + (int) temp;
+			day = temp;
 			date += temp;
 			break;
 		}
-		
+		makeName();
 		return date;
 	}
 	
@@ -159,10 +183,37 @@ public class Entry {
 		else if( month.contains("se")  || month.contains("9")  )
 			monthValue = 8;
 		
-		if( option == 0 )
-			dateName = dateName + dateList[monthValue];
+//		if( option == 0 )
+//			dateName = dateName + dateList[monthValue];
+		this.month = dateList[monthValue];
 		monthValue *= 16;
 		return monthValue;
+	}
+	
+	public void makeName(){
+		switch (format){ 
+		case DMY:
+			dateName = String.format(day +" " + month + ", " + year);
+			break;
+		case DYM:
+			dateName = String.format(day +" " + year + ", " + month);
+			break;
+		case MDY:
+			dateName = String.format(month +" " + day + ", " + year);
+			break;
+		case MYD:
+			dateName = String.format(month +" " + year + ", " + day);
+			break;
+		case YMD:
+			dateName = String.format(year +" " + ", " + month + day);
+			break;
+		case YDM:
+			dateName = String.format(year +" " + ", " + day + month);
+			break;
+			default:
+				break;
+				
+		}
 	}
 
 	public short getDate(){
