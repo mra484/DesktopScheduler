@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,8 +42,10 @@ public class DialogWindow extends JDialog{
 		private Actions actions = new Actions();
 		
 		//option dialog window components
-		private JLabel[] optionNames = {new JLabel("Display empty dates")};
+		private JLabel[] optionNames = {new JLabel("Display empty dates:")};
 		private JCheckBox[] optionBoxes;
+		private JLabel dateFormatLabel = new JLabel("Display format:");
+		private JComboBox<String> dateFormat = new JComboBox<String>();
 		private JPanel optionPanel = new JPanel();
 		private GridBagConstraints c = new GridBagConstraints();
 		
@@ -54,9 +57,10 @@ public class DialogWindow extends JDialog{
 		private int option;
 		
 		public DialogWindow(MainWindow mainWindow){
-			setSize(230, 260);
+			setSize(290, 130);
 			setVisible(false);
 			setLocation(new Point(mainWindow.getX()+50, mainWindow.getY()+50));
+			createComboBox();
 			option = OPTION_WINDOW;
 			arrangeWindow();
 		}
@@ -74,18 +78,19 @@ public class DialogWindow extends JDialog{
 		}
 		
 		public void arrangeWindow(){
+			int i = 0;
 			setLayout(new BorderLayout());
 			buttonPanel.setLayout(new FlowLayout());
 			
 			//create check boxes
 			if( option == OPTION_WINDOW){
 				optionBoxes = new JCheckBox[optionNames.length];
-				for(int i = 0 ; i < optionNames.length ; i++ ){
+				for(i = 0 ; i < optionNames.length ; i++ ){
 					optionBoxes[i] = new JCheckBox();
 				}
 			}
 			//adds action listener to buttons and adds buttons to panel
-			for( int i = 0 ; i < buttons.length ; i++ ){
+			for( i = 0 ; i < buttons.length ; i++ ){
 				buttons[i].addActionListener(actions);
 				buttonPanel.add(buttons[i]);
 			}
@@ -101,15 +106,22 @@ public class DialogWindow extends JDialog{
 				c.anchor = GridBagConstraints.NORTHWEST;
 				
 				//list each option
-				for( int i = 0 ; i < optionNames.length ; i++ ){
+				for( i = 0 ; i < optionNames.length ; i++ ){
 					c.gridx = i;
 					c.gridy = i;
 					optionPanel.add(optionNames[i], c);
 					
-					c.gridx = i+1;
+					c.gridx = 1;
 					optionPanel.add(optionBoxes[i], c);
 				}
-				add(optionPanel, BorderLayout.CENTER);
+				c.gridx = 0;
+				c.gridy = i+1;
+				optionPanel.add(dateFormatLabel, c);
+				
+				c.gridx = 1;
+				optionPanel.add(dateFormat, c);
+				
+				add(optionPanel, BorderLayout.WEST);
 				add(buttonPanel, BorderLayout.SOUTH);
 				break;
 				
@@ -128,7 +140,15 @@ public class DialogWindow extends JDialog{
 				add(buttonPanel, BorderLayout.SOUTH);
 			}
 		}
-		
+		private void createComboBox(){
+			int temp = Entry.format;
+			Entry dateName = new Entry("1/1/1");
+			for(int i = 0 ; i < 6 ; i++ ){
+				dateName.setFormat(i);
+				dateFormat.addItem(dateName.getName());
+			}
+			dateName.setFormat(temp);
+		}
 		private class Actions implements ActionListener{
 			public void actionPerformed(ActionEvent e){
 				switch (option){

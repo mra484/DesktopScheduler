@@ -199,7 +199,7 @@ public class Entry {
 			dateName = String.format(day +" " + month + ", " + year);
 			break;
 		case DYM:
-			dateName = String.format(day +" " + year + ", " + month);
+			dateName = String.format(day +", " + year + " " + month);
 			break;
 		case MDY:
 			dateName = String.format(month +" " + day + ", " + year);
@@ -208,10 +208,10 @@ public class Entry {
 			dateName = String.format(month +" " + year + ", " + day);
 			break;
 		case YMD:
-			dateName = String.format(year +" " + ", " + month + day);
+			dateName = String.format(year + ", " + month +" " + day);
 			break;
 		case YDM:
-			dateName = String.format(year +" " + ", " + day + month);
+			dateName = String.format(year + ", " + day +" " + month);
 			break;
 			default:
 				break;
@@ -227,6 +227,10 @@ public class Entry {
 		return dateName;
 	}
 	
+	public void setFormat(int a){
+		format = a;
+		makeName();
+	}
 	public HashMap<String, DateEntry> getList(){
 		return data;
 	}
