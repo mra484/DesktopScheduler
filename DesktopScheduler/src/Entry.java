@@ -1,3 +1,5 @@
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 public class Entry {
 	
@@ -17,6 +19,7 @@ public class Entry {
 	public static final int MYD = 3;
 	public static final int YMD = 4;
 	public static final int YDM = 5;
+	public static Calendar today = Calendar.getInstance();
 	
 	public Entry(String date){
 		this.date = parseDate(date, 0);
@@ -226,5 +229,8 @@ public class Entry {
 	
 	public HashMap<String, DateEntry> getList(){
 		return data;
+	}
+	public void setToday(){
+		
 	}
 }

@@ -21,14 +21,20 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class ControlPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	private Lister list;
 	private FileHandler filer;
-	private JButton add = new JButton("Create New Entry");
+	private MainWindow mainWindow;
+	private DialogWindow optionWindow = null;
+	
+	private JButton add = new JButton("New Entry");
 	private JButton delete = new JButton("Delete Selected Entry");
+	private JButton option = new JButton("O");
 	private JTextField date = new JTextField();
 	private JTextField title = new JTextField();
 	private JTextArea memo = new JTextArea(4, 4);
@@ -54,18 +60,21 @@ public class ControlPanel extends JPanel{
 		
 		setLayout(new GridBagLayout());
 		arrange();
-		add.addActionListener(action);
-		delete.addActionListener(action);
+		
 		date.setText(a.getDate());
 		title.setText(a.getTitle());
 		memo.setText(a.getMemo());
 		remove(add);
 		remove(delete);
+		remove(this.option);
 		
 	}
-	public ControlPanel(Lister a, FileHandler b){
+	public ControlPanel(Lister a, FileHandler b, MainWindow c){
 		list = a;
 		filer = b;
+		mainWindow = c;
+
+		optionWindow = new DialogWindow(mainWindow);
 		
 		date.addMouseListener(highlight);
 		title.addMouseListener(highlight);
@@ -75,6 +84,7 @@ public class ControlPanel extends JPanel{
 		arrange();
 		add.addActionListener(action);
 		delete.addActionListener(action);
+		option.addActionListener(action);
 	}
 	public Lister getList(){
 		return list;
@@ -102,37 +112,53 @@ public class ControlPanel extends JPanel{
 	}
 	public void arrange(){
 		c.fill = GridBagConstraints.HORIZONTAL;
+		
+		//add button
 		c.gridx = 0;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(0,0,10,0);
 		add(add, c);
 		
+		//delete button
 		c.gridx = 1;
 		add(delete, c);
 		
-		c.gridy = 1;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.insets = new Insets(0,0,0,0);
-		add(date, c);
+		//option button
+		c.gridx = 2;
+		add(option, c);
 		
+		//date label
 		c.fill = GridBagConstraints.NONE;
+		c.insets = new Insets(0,0,0,0);
+		c.gridy = 1;
 		c.gridx = 0;
-		c.gridwidth = GridBagConstraints.RELATIVE;
+		c.gridwidth = 1;
 		add(dateLabel, c);
 		
+		//date field
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		add(date, c);
+		
+		//title label
+		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		add(titleLabel, c);
 		
+		//title field
 		c.gridy = 3;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(title, c);
 		
+		//memo label
 		c.gridy = 4;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		add(memoLabel, c);
 		
+		//memo field
 		c.gridy = 5;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.fill = GridBagConstraints.BOTH;
@@ -182,7 +208,7 @@ public class ControlPanel extends JPanel{
 		field.setSelectionStart(0);
 		field.setSelectionEnd(field.getText().length());
 	}
-
+	
 	private class ActionHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			Object source = e.getSource();
@@ -191,6 +217,8 @@ public class ControlPanel extends JPanel{
 				add();
 			} else if( source == delete) {
 				delete();
+			} else if( source == option) {
+				optionWindow.setVisible(true);
 			}
 
 			filer.saveData();

@@ -19,11 +19,14 @@
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,15 +35,31 @@ public class DialogWindow extends JDialog{
 	private static final long serialVersionUID = 1L;
 	public static final int DELETE_WINDOW = 0;
 	public static final int EDIT_WINDOW = 1;
+	public static final int OPTION_WINDOW = 2;
+	
 		private ControlPanel control;
-		
 		private Actions actions = new Actions();
+		
+		//option dialog window components
+		private JLabel[] optionNames = {new JLabel("Display empty dates")};
+		private JCheckBox[] optionBoxes;
+		private JPanel optionPanel = new JPanel();
+		private GridBagConstraints c = new GridBagConstraints();
+		
+		//entry dialog window components
 		private String questionString = "Are you sure you want to delete the selected event?";
 		private JLabel question = new JLabel(String.format("<html><div style=\"width:%dpx;\">%s</div><html>", 180, questionString));
 		private JButton[] buttons = {new JButton("Yes"), new JButton("No")};
 		private JPanel buttonPanel = new JPanel();
 		private int option;
 		
+		public DialogWindow(MainWindow mainWindow){
+			setSize(230, 260);
+			setVisible(false);
+			setLocation(new Point(mainWindow.getX()+50, mainWindow.getY()+50));
+			option = OPTION_WINDOW;
+			arrangeWindow();
+		}
 		public DialogWindow(MainWindow mainWindow, ControlPanel controlPanel, int option){
 			this.option = option;
 			control = controlPanel;
@@ -50,9 +69,21 @@ public class DialogWindow extends JDialog{
 
 			setModal(true);
 			setModalityType(ModalityType.APPLICATION_MODAL);
+			
+			arrangeWindow();
+		}
+		
+		public void arrangeWindow(){
 			setLayout(new BorderLayout());
 			buttonPanel.setLayout(new FlowLayout());
 			
+			//create check boxes
+			if( option == OPTION_WINDOW){
+				optionBoxes = new JCheckBox[optionNames.length];
+				for(int i = 0 ; i < optionNames.length ; i++ ){
+					optionBoxes[i] = new JCheckBox();
+				}
+			}
 			//adds action listener to buttons and adds buttons to panel
 			for( int i = 0 ; i < buttons.length ; i++ ){
 				buttons[i].addActionListener(actions);
@@ -61,17 +92,39 @@ public class DialogWindow extends JDialog{
 			
 			//Create window appearance depending on the situation
 			switch (option) {
+			case OPTION_WINDOW:
+				setTitle("Options");
+				buttons[1].setText("Close");
+				buttonPanel.remove(buttons[0]);
+				optionPanel.setLayout(new GridBagLayout());
+				c.fill = GridBagConstraints.NONE;
+				c.anchor = GridBagConstraints.NORTHWEST;
+				
+				//list each option
+				for( int i = 0 ; i < optionNames.length ; i++ ){
+					c.gridx = i;
+					c.gridy = i;
+					optionPanel.add(optionNames[i], c);
+					
+					c.gridx = i+1;
+					optionPanel.add(optionBoxes[i], c);
+				}
+				add(optionPanel, BorderLayout.CENTER);
+				add(buttonPanel, BorderLayout.SOUTH);
+				break;
+				
 			case DELETE_WINDOW:
 				setTitle("Confirm event delete");
 				add(question, BorderLayout.NORTH);
-				add(controlPanel, BorderLayout.CENTER);
+				add(control, BorderLayout.CENTER);
 				add(buttonPanel, BorderLayout.SOUTH);
 				break;
+				
 			case EDIT_WINDOW:
 				setTitle("Edit the current event");
 				buttons[0].setText("Edit");
 				buttons[1].setText("Cancel");
-				add(controlPanel, BorderLayout.CENTER);
+				add(control, BorderLayout.CENTER);
 				add(buttonPanel, BorderLayout.SOUTH);
 			}
 		}
@@ -94,6 +147,10 @@ public class DialogWindow extends JDialog{
 					}
 					break;
 					
+				case OPTION_WINDOW:
+					//hide option window on close
+					setVisible(false);
+					return;
 				default:
 					break;
 				}

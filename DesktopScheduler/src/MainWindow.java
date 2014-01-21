@@ -13,8 +13,9 @@ public class MainWindow extends JFrame{
 	private JList<String> list = new JList<String>();
 	private Lister lister = new Lister(list, this);
 	private FileHandler filer = new FileHandler(lister);
-	private ControlPanel controls = new ControlPanel(lister, filer);
+	private ControlPanel controls = new ControlPanel(lister, filer, this);
 	private GridBagConstraints c = new GridBagConstraints();
+	
 	
 	public MainWindow(){
 		super("Desktop Scheduler");
