@@ -140,6 +140,13 @@ public class Lister extends JScrollPane{
 		
 	}
 	
+	public void updateDateNames(){
+		for(Entry a: dateList.values()){
+			a.makeName();
+		}
+		updateList();
+	}
+	
 	public class NewCellRenderer extends DefaultListCellRenderer{
 		private static final long serialVersionUID = 1L;
 

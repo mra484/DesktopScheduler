@@ -10,6 +10,8 @@ import java.awt.Toolkit;
 public class MainWindow extends JFrame{
 	private static final long serialVersionUID = 1L;
 	public static int windowHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 50;
+	public static boolean emptyDates = false;
+	
 	private JList<String> list = new JList<String>();
 	private Lister lister = new Lister(list, this);
 	private FileHandler filer = new FileHandler(lister);
@@ -47,6 +49,10 @@ public class MainWindow extends JFrame{
 		return controls;
 	}
 	
+	public void updateDateNames(){
+		lister.updateDateNames();
+		filer.saveData();
+	}
 	public static void main(String[] args){
 		new MainWindow();
 	}

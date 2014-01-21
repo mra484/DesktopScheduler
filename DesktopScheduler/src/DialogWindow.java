@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -40,6 +41,7 @@ public class DialogWindow extends JDialog{
 	
 		private ControlPanel control;
 		private Actions actions = new Actions();
+		private MainWindow mainWindow;
 		
 		//option dialog window components
 		private JLabel[] optionNames = {new JLabel("Display empty dates:")};
@@ -48,6 +50,7 @@ public class DialogWindow extends JDialog{
 		private JComboBox<String> dateFormat = new JComboBox<String>();
 		private JPanel optionPanel = new JPanel();
 		private GridBagConstraints c = new GridBagConstraints();
+		private Entry dateName = new Entry("1/1/1");
 		
 		//entry dialog window components
 		private String questionString = "Are you sure you want to delete the selected event?";
@@ -56,7 +59,9 @@ public class DialogWindow extends JDialog{
 		private JPanel buttonPanel = new JPanel();
 		private int option;
 		
+		//option window constructor
 		public DialogWindow(MainWindow mainWindow){
+			this.mainWindow = mainWindow;
 			setSize(290, 130);
 			setVisible(false);
 			setLocation(new Point(mainWindow.getX()+50, mainWindow.getY()+50));
@@ -64,6 +69,8 @@ public class DialogWindow extends JDialog{
 			option = OPTION_WINDOW;
 			arrangeWindow();
 		}
+		
+		//edit/delete window constructor
 		public DialogWindow(MainWindow mainWindow, ControlPanel controlPanel, int option){
 			this.option = option;
 			control = controlPanel;
@@ -87,6 +94,7 @@ public class DialogWindow extends JDialog{
 				optionBoxes = new JCheckBox[optionNames.length];
 				for(i = 0 ; i < optionNames.length ; i++ ){
 					optionBoxes[i] = new JCheckBox();
+					optionBoxes[i].addActionListener(actions);
 				}
 			}
 			//adds action listener to buttons and adds buttons to panel
@@ -148,9 +156,34 @@ public class DialogWindow extends JDialog{
 				dateFormat.addItem(dateName.getName());
 			}
 			dateName.setFormat(temp);
+			dateFormat.addActionListener(actions);
 		}
 		private class Actions implements ActionListener{
 			public void actionPerformed(ActionEvent e){
+				Object source = e.getSource();
+				
+				//change in dateFormat
+				if(source == dateFormat){
+					dateName.setFormat(dateFormat.getSelectedIndex());
+					mainWindow.updateDateNames();
+					return;
+					
+				//change in other options
+				} else if (source instanceof JCheckBox) {
+					int i;
+					for(i = 0 ; i < optionNames.length ; i++){
+						if( source == optionBoxes[i])
+							break;
+					}
+					switch(i){
+					case 0:
+						MainWindow.emptyDates = optionBoxes[i].isSelected();
+						break;
+					default:
+						System.out.println("unformatted option selected");
+					}
+					return;
+				}
 				switch (option){
 				
 				case DELETE_WINDOW:
