@@ -40,7 +40,8 @@ public class Lister extends JScrollPane{
 	private static final long serialVersionUID = 1L;
 	
 	//contains a list of dates with events
-	private HashMap<Short, Entry> dateList = new HashMap<Short, Entry>(); 
+	private TreeMap<Integer, Entry> dateList = new TreeMap<Integer, Entry>(); 
+//	private HashMap<Integer, Entry> dateList = new HashMap<Integer, Entry>(); 
 	private JList<String> list;
 	
 	//contains a list of indexes containing a date or a space
@@ -112,7 +113,7 @@ public class Lister extends JScrollPane{
 		
 	}
 	
-	public HashMap<Short, Entry> getList(){
+	public TreeMap<Integer, Entry> getList(){
 		return dateList;
 	}
 	
@@ -179,7 +180,7 @@ public class Lister extends JScrollPane{
 	//disables selection of empty space and date labels
 	public class DisableSelectionModel extends DefaultListSelectionModel{
 		private static final long serialVersionUID = 1L;
-		short dateValue;
+		int dateValue;
 		String date;
 		
 		@Override

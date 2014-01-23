@@ -7,11 +7,11 @@ public class Entry {
 	private HashMap<String, DateEntry> data = new HashMap<String, DateEntry>();
 	private String[] dateList = {"January", "February", "March", "April", "May", "June", "July", "August",
 			"September", "October", "November", "December"};	
-	private short date;
+	private int date;
 	private String dateName = "";
 	private String month = "";
-	private short day = 0;
-	private short year = 0;
+	private int day = 0;
+	private int year = 0;
 	public static int format = 0;
 	public static final int DMY = 0;
 	public static final int DYM = 1;
@@ -33,14 +33,14 @@ public class Entry {
 		data.remove(info);
 	}
 	
-	public short parseDate(String dateString, int option){
+	public int parseDate(String dateString, int option){
 		//option = 0 for creating a new entry, includes date name as a string
 		//option = 1 for only calculating the (short) value of a date
 		
 		String[] split;
-		short date = 0;
-		short temp = 0;
-		dateString.toLowerCase();
+		int date = 0;
+		int temp = 0;
+		dateString = dateString.toLowerCase().replace(",", "");
 		
 		//try to determine separators and split up the date
 		if( dateString.contains("-") )
@@ -58,7 +58,7 @@ public class Entry {
 		switch( Entry.format ){
 		case DMY:
 			//day
-			temp = (short) Integer.parseInt(split[0]);
+			temp = Integer.parseInt(split[0]);
 			day = temp;
 			date += temp;
 			
@@ -66,7 +66,7 @@ public class Entry {
 			date += parseMonth(split[1], option);
 			
 			//year
-			temp = (short) Integer.parseInt(split[2]);
+			temp = Integer.parseInt(split[2]);
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
@@ -74,12 +74,12 @@ public class Entry {
 			break;
 		case DYM:
 			//day
-			temp = Byte.parseByte(split[0]);
+			temp = Integer.parseInt(split[0]);
 			day = temp;
 			date += temp;
 			
 			//year
-			temp = Byte.parseByte(split[1]);
+			temp = Integer.parseInt(split[1]);
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
@@ -93,12 +93,12 @@ public class Entry {
 			date += parseMonth(split[0], option);
 			
 			//day
-			temp = Byte.parseByte(split[1]);
+			temp = Integer.parseInt(split[1]);
 			day = temp;
 			date += temp;
 			
 			//year
-			temp = Byte.parseByte(split[2]);
+			temp = Integer.parseInt(split[2]);
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
@@ -109,27 +109,27 @@ public class Entry {
 			date += parseMonth(split[0], option);
 			
 			//year
-			temp = Byte.parseByte(split[1]);
+			temp = Integer.parseInt(split[1]);
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
 			date += temp << 8;
 			
 			//day
-			temp += Byte.parseByte(split[2]);
+			temp += Integer.parseInt(split[2]);
 			date += temp;
 			day = temp;
 			break;
 		case YDM:
 			//year
-			temp = Byte.parseByte(split[0]);
+			temp = Integer.parseInt(split[0]);
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
 			date += temp << 8;
 			
 			//day
-			temp = Byte.parseByte(split[1]);
+			temp = Integer.parseInt(split[1]);
 			day = temp;
 			date += temp;
 			
@@ -138,7 +138,7 @@ public class Entry {
 			break;
 		case YMD:
 			//year
-			temp = Byte.parseByte(split[0]);
+			temp = Integer.parseInt(split[0]);
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
@@ -148,7 +148,7 @@ public class Entry {
 			date += parseMonth(split[1], option);
 			
 			//day
-			temp = Byte.parseByte(split[2]);
+			temp = Integer.parseInt(split[2]);
 			day = temp;
 			date += temp;
 			break;
@@ -159,7 +159,7 @@ public class Entry {
 	
 	private short parseMonth(String month, int option){
 		byte monthValue = -1;
-		month = month.toLowerCase().replace(" ", "").replace(",", "");
+		month = month.toLowerCase().replace(" ", "");
 		
 		if( month.contains("oc")  || month.contains("10") )
 			monthValue = 9;
@@ -219,7 +219,7 @@ public class Entry {
 		}
 	}
 
-	public short getDate(){
+	public int getDate(){
 		return date;
 	}
 	

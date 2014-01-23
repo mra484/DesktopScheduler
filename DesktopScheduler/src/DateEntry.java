@@ -1,10 +1,10 @@
 
 public class DateEntry implements Comparable<DateEntry>{
-	private short date;
+	private int date;
 	private String title;
 	private String memo;
 	
-	public DateEntry(short newDate, String newTitle, String newMemo){
+	public DateEntry(int newDate, String newTitle, String newMemo){
 		if(newTitle.compareTo("") == 0)
 			newTitle = " ";
 		if(newMemo.compareTo("") == 0)
@@ -14,7 +14,7 @@ public class DateEntry implements Comparable<DateEntry>{
 		memo = newMemo;
 	}
 	
-	public short getDate(){
+	public int getDate(){
 		return date;
 	}
 	
