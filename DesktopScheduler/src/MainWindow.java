@@ -11,6 +11,7 @@ public class MainWindow extends JFrame{
 	private static final long serialVersionUID = 1L;
 	public static int windowHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 50;
 	public static boolean emptyDates = false;
+	public static String today;
 	
 	private JList<String> list = new JList<String>();
 	private Lister lister = new Lister(list, this);
@@ -21,6 +22,8 @@ public class MainWindow extends JFrame{
 	
 	public MainWindow(){
 		super("Desktop Scheduler");
+		today = Entry.getToday();
+		System.out.println(today);
 		lister.setControl(controls);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

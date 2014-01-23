@@ -234,7 +234,24 @@ public class Entry {
 	public HashMap<String, DateEntry> getList(){
 		return data;
 	}
-	public void setToday(){
+	public static String getToday(){
+		switch (format){ 
+		case DMY:
+			return String.format(today.get(Calendar.DAY_OF_MONTH) +" " + today.get(Calendar.MONTH)+1 + ", " + today.get(Calendar.YEAR));
+		case DYM:
+			return String.format(today.get(Calendar.DAY_OF_MONTH) +", " + today.get(Calendar.YEAR) + " " + today.get(Calendar.MONTH)+1);
+		case MDY:
+			return String.format(today.get(Calendar.MONTH)+1 +" " + today.get(Calendar.DAY_OF_MONTH) + ", " + today.get(Calendar.YEAR));
+		case MYD:
+			return String.format(today.get(Calendar.MONTH)+1 +" " + today.get(Calendar.YEAR) + ", " + today.get(Calendar.DAY_OF_MONTH));
+		case YMD:
+			return String.format(today.get(Calendar.YEAR) + ", " + today.get(Calendar.MONTH)+1 +" " + today.get(Calendar.DAY_OF_MONTH));
+		case YDM:
+			return String.format(today.get(Calendar.YEAR) + ", " + today.get(Calendar.DAY_OF_MONTH) +" " + today.get(Calendar.MONTH)+1);
+			default:
+				return "";
+				
+		}
 		
 	}
 }
