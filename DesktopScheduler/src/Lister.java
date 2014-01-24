@@ -120,7 +120,32 @@ public class Lister extends JScrollPane{
 	public void updateList(){
 		DefaultListModel<String> m = new DefaultListModel<String>();
 		int i = 0;
-		
+		if( MainWindow.today == null ){
+			MainWindow.today = Entry.getToday();
+		}
+		String currentDate = MainWindow.today;
+//		HashMap<String, DateEntry> list;
+		if( MainWindow.emptyDates ){
+			spaceIndex.clear();
+			dateIndex.clear();
+			for(int j = 0 ; j < 10 ; j++ ){
+				Entry currentDay = new Entry(currentDate);
+				m.add(i, currentDay.getName());
+				dateIndex.put(i++, currentDate);
+				if( dateList.containsKey(currentDay.getDate())){
+
+					for(DateEntry b: dateList.get(currentDay.getDate()).getList().values()){
+						m.add(i++, b.getTitle());
+					}
+					
+					//add space at the end of a date and record the index
+					spaceIndex.add(i);
+					m.add(i++, " ");
+				}
+				Entry.nextDay();
+				currentDate = Entry.getToday();
+			}
+		} else {
 		//retrieve and add date to jlist, record the index of the date
 		for(Entry a: dateList.values()){
 			dateIndex.put(i, a.getName());
@@ -136,6 +161,7 @@ public class Lister extends JScrollPane{
 			//add space at the end of a date and record the index
 			spaceIndex.add(i);
 			m.add(i++, " ");
+		}
 		}
 		list.setModel(m);
 		

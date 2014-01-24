@@ -234,6 +234,15 @@ public class Entry {
 	public HashMap<String, DateEntry> getList(){
 		return data;
 	}
+	
+	public static void nextDay(){
+		today.roll(Calendar.DAY_OF_MONTH, true);
+		if(today.get(Calendar.DAY_OF_MONTH) == 1){
+			today.roll(Calendar.MONTH, true);
+			if( today.get(Calendar.MONTH) == 0)
+				today.roll(Calendar.YEAR, true);
+		}
+	}
 	public static String getToday(){
 		switch (format){ 
 		case DMY:
