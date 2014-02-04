@@ -19,7 +19,7 @@ public class Entry {
 	public static final int MYD = 3;
 	public static final int YMD = 4;
 	public static final int YDM = 5;
-	public static Calendar today = Calendar.getInstance();
+	public static Calendar today;
 	
 	public Entry(String date){
 		this.date = parseDate(date, 0);
@@ -116,7 +116,7 @@ public class Entry {
 			date += temp << 8;
 			
 			//day
-			temp += Integer.parseInt(split[2]);
+			temp = Integer.parseInt(split[2]);
 			date += temp;
 			day = temp;
 			break;
@@ -243,20 +243,27 @@ public class Entry {
 				today.roll(Calendar.YEAR, true);
 		}
 	}
+	public static void resetDay(){
+		today = Calendar.getInstance();
+	}
 	public static String getToday(){
+		int day = today.get(Calendar.DAY_OF_MONTH);
+		int month = today.get(Calendar.MONTH) + 1;
+		int year = today.get(Calendar.YEAR);
+		
 		switch (format){ 
 		case DMY:
-			return String.format(today.get(Calendar.DAY_OF_MONTH) +" " + today.get(Calendar.MONTH)+1 + ", " + today.get(Calendar.YEAR));
+			return String.format(day +" " + month + ", " + year);
 		case DYM:
-			return String.format(today.get(Calendar.DAY_OF_MONTH) +", " + today.get(Calendar.YEAR) + " " + today.get(Calendar.MONTH)+1);
+			return String.format(day +", " + year + " " + month);
 		case MDY:
-			return String.format(today.get(Calendar.MONTH)+1 +" " + today.get(Calendar.DAY_OF_MONTH) + ", " + today.get(Calendar.YEAR));
+			return String.format(month +" " + day + ", " + year);
 		case MYD:
-			return String.format(today.get(Calendar.MONTH)+1 +" " + today.get(Calendar.YEAR) + ", " + today.get(Calendar.DAY_OF_MONTH));
+			return String.format(month +" " + year + ", " + day);
 		case YMD:
-			return String.format(today.get(Calendar.YEAR) + ", " + today.get(Calendar.MONTH)+1 +" " + today.get(Calendar.DAY_OF_MONTH));
+			return String.format(year + ", " + month +" " + day);
 		case YDM:
-			return String.format(today.get(Calendar.YEAR) + ", " + today.get(Calendar.DAY_OF_MONTH) +" " + today.get(Calendar.MONTH)+1);
+			return String.format(year + ", " + day +" " + month);
 			default:
 				return "";
 				

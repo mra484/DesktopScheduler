@@ -96,6 +96,7 @@ public class DialogWindow extends JDialog{
 					optionBoxes[i] = new JCheckBox();
 					optionBoxes[i].addActionListener(actions);
 				}
+				optionBoxes[0].setSelected(MainWindow.emptyDates);
 			}
 			//adds action listener to buttons and adds buttons to panel
 			for( i = 0 ; i < buttons.length ; i++ ){
@@ -157,6 +158,7 @@ public class DialogWindow extends JDialog{
 			}
 			dateName.setFormat(temp);
 			dateFormat.addActionListener(actions);
+			dateFormat.setSelectedIndex(Entry.format);
 		}
 		private class Actions implements ActionListener{
 			public void actionPerformed(ActionEvent e){
@@ -182,6 +184,7 @@ public class DialogWindow extends JDialog{
 					default:
 						System.out.println("unformatted option selected");
 					}
+					mainWindow.updateDateNames();
 					return;
 				}
 				switch (option){

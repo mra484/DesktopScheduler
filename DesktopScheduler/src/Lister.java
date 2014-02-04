@@ -38,6 +38,8 @@ import javax.swing.ListSelectionModel;
 public class Lister extends JScrollPane{
 	
 	private static final long serialVersionUID = 1L;
+	private Font titleFont = new Font("titleFont", Font.PLAIN, 10);
+	private Font dateFont = new Font("dateFont", Font.BOLD, 18);
 	
 	//contains a list of dates with events
 	private TreeMap<Integer, Entry> dateList = new TreeMap<Integer, Entry>(); 
@@ -120,14 +122,15 @@ public class Lister extends JScrollPane{
 	public void updateList(){
 		DefaultListModel<String> m = new DefaultListModel<String>();
 		int i = 0;
-		if( MainWindow.today == null ){
-			MainWindow.today = Entry.getToday();
-		}
+		
+		Entry.resetDay();
+		MainWindow.today = Entry.getToday();
 		String currentDate = MainWindow.today;
+		spaceIndex.clear();
+		dateIndex.clear();
+		
 //		HashMap<String, DateEntry> list;
 		if( MainWindow.emptyDates ){
-			spaceIndex.clear();
-			dateIndex.clear();
 			for(int j = 0 ; j < 10 ; j++ ){
 				Entry currentDay = new Entry(currentDate);
 				m.add(i, currentDay.getName());
@@ -139,6 +142,9 @@ public class Lister extends JScrollPane{
 					}
 					
 					//add space at the end of a date and record the index
+					spaceIndex.add(i);
+					m.add(i++, " ");
+				} else {
 					spaceIndex.add(i);
 					m.add(i++, " ");
 				}
@@ -154,8 +160,8 @@ public class Lister extends JScrollPane{
 			//retrieve date's event list and add to jlist
 			for(DateEntry b: a.getList().values()){
 				m.add(i++, b.getTitle());
-				spaceIndex.remove(i);
-				dateIndex.remove(i);
+//				spaceIndex.remove(i);
+//				dateIndex.remove(i);
 			}
 			
 			//add space at the end of a date and record the index
@@ -189,9 +195,15 @@ public class Lister extends JScrollPane{
 			Component comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			setText(indent + textValue);
 			
+			//display information for titles
 			if( !dateIndex.containsKey(index) && !spaceIndex.contains(index) ){
-				setFont(new Font("small", Font.PLAIN, 11));
+				setFont(titleFont);
 				setText(indent + textValue);
+			
+			//display information for dates
+			} else if ( dateIndex.containsKey(index) ){
+				setFont(dateFont);
+				setText(textValue);
 			} else
 				setText(textValue);
 			
