@@ -34,6 +34,7 @@ import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.plaf.basic.BasicListUI.ListSelectionHandler;
 
 public class Lister extends JScrollPane{
 	
@@ -215,6 +216,7 @@ public class Lister extends JScrollPane{
 
 	}
 	
+
 	//disables selection of empty space and date labels
 	public class DisableSelectionModel extends DefaultListSelectionModel{
 		private static final long serialVersionUID = 1L;

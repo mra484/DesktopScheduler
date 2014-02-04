@@ -136,6 +136,7 @@ public class DialogWindow extends JDialog{
 				
 			case DELETE_WINDOW:
 				setTitle("Confirm event delete");
+				control.makeFinal();
 				add(question, BorderLayout.NORTH);
 				add(control, BorderLayout.CENTER);
 				add(buttonPanel, BorderLayout.SOUTH);

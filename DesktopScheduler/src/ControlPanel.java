@@ -49,6 +49,7 @@ public class ControlPanel extends JPanel{
 	private Mouse highlight = new Mouse();
 	private GridBagConstraints c = new GridBagConstraints();
 	
+	//constructor for edit/delete popup window
 	public ControlPanel(ControlPanel a, int option){
 		originalControl = a;
 		list = a.getList();
@@ -69,6 +70,8 @@ public class ControlPanel extends JPanel{
 		remove(this.option);
 		
 	}
+	
+	//constructor for main window
 	public ControlPanel(Lister a, FileHandler b, MainWindow c){
 		list = a;
 		filer = b;
@@ -109,6 +112,11 @@ public class ControlPanel extends JPanel{
 	}
 	public void setMemo(String a){
 		memo.setText(a);
+	}
+	public void makeFinal(){
+		date.setEditable(false);
+		title.setEditable(false);
+		memo.setEditable(false);
 	}
 	public void arrange(){
 		c.fill = GridBagConstraints.HORIZONTAL;
