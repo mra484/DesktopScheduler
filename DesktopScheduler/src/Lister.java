@@ -25,6 +25,8 @@ import java.awt.Point;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.*;
 
 import javax.swing.DefaultListCellRenderer;
@@ -54,6 +56,7 @@ public class Lister extends JScrollPane{
 	
 	private NewCellRenderer cr = new NewCellRenderer();
 	private KeyHandler key = new KeyHandler();
+	private MouseHandler mouse = new MouseHandler();
 	
 	private ControlPanel control;
 	private MainWindow main;
@@ -64,6 +67,7 @@ public class Lister extends JScrollPane{
 		list = jlist;
 		list.addKeyListener(key);
 		list.setCellRenderer(cr);
+		list.addMouseListener(mouse);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setSelectionModel(new DisableSelectionModel());
 		setBackground(Color.WHITE);
@@ -263,6 +267,43 @@ public class Lister extends JScrollPane{
 		public void keyReleased(KeyEvent e){
 			
 		}
+	}
+	
+	private class MouseHandler implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			//popup on double click
+			if( e.getClickCount() == 2){
+				new DialogWindow(main, new ControlPanel(control, 0), DialogWindow.EDIT_WINDOW);				
+			}
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 	
 
