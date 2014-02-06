@@ -43,6 +43,7 @@ public class ControlPanel extends JPanel{
 	private JLabel memoLabel = new JLabel("Enter additional information below:");
 	JScrollPane memoArea = new JScrollPane(memo);
 	private Entry current = new Entry("1/1/1");
+	private JTextComponent lastSelected = null;
 	
 	private ControlPanel originalControl = this;
 	private ActionHandler action = new ActionHandler();
@@ -227,6 +228,8 @@ public class ControlPanel extends JPanel{
 				delete();
 			} else if( source == option) {
 				optionWindow.setVisible(true);
+			} else {
+				lastSelected = (JTextComponent) source;
 			}
 
 			filer.saveData();
@@ -238,8 +241,10 @@ public class ControlPanel extends JPanel{
 		@Override
 		public void mouseClicked(MouseEvent e) {	
 			Object source = e.getSource();
-		
+			if( source == lastSelected)
+				return;
 			if( source == date || source == title || source == memo) {
+				lastSelected = (JTextComponent) source;
 				date.selectAll();
 				title.selectAll();
 				memo.selectAll();				
@@ -258,8 +263,7 @@ public class ControlPanel extends JPanel{
 		}
 
 		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+		public void mousePressed(MouseEvent e) {
 			
 		}
 

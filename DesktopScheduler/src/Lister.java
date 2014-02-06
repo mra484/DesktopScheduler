@@ -40,7 +40,7 @@ public class Lister extends JScrollPane{
 	
 	private static final long serialVersionUID = 1L;
 	private Font titleFont = new Font("titleFont", Font.PLAIN, 10);
-	private Font dateFont = new Font("dateFont", Font.BOLD, 18);
+	private Font dateFont = new Font("dateFont", Font.BOLD, 14);
 	
 	//contains a list of dates with events
 	private TreeMap<Integer, Entry> dateList = new TreeMap<Integer, Entry>(); 
