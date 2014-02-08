@@ -1,10 +1,17 @@
-import java.util.HashSet;
-public class Entry {
-	private HashSet<String> data = new HashSet<String>();
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+public class Entry implements Comparable<Integer>{
+	
+	//data will be stored using the event title as a key for the the dataentry object
+	private HashMap<String, DateEntry> data = new HashMap<String, DateEntry>();
 	private String[] dateList = {"January", "February", "March", "April", "May", "June", "July", "August",
 			"September", "October", "November", "December"};	
-	private short date;
+	private int date;
 	private String dateName = "";
+	private String month = "";
+	private int day = 0;
+	private int year = 0;
 	public static int format = 0;
 	public static final int DMY = 0;
 	public static final int DYM = 1;
@@ -12,24 +19,28 @@ public class Entry {
 	public static final int MYD = 3;
 	public static final int YMD = 4;
 	public static final int YDM = 5;
+	public static Calendar today;
 	
 	public Entry(String date){
 		this.date = parseDate(date, 0);
 	}
 	
-	public boolean add(String info) {
-		return data.add(info);
+	public void add(String title, String memo) {
+		data.put(title, new DateEntry(date, title, memo));
 	}
 	
-	public boolean remove(String info) {
-		return data.remove(info);
+	public void remove(String info) {
+		data.remove(info);
 	}
 	
-	public short parseDate(String dateString, int option){
+	public int parseDate(String dateString, int option){
+		//option = 0 for creating a new entry, includes date name as a string
+		//option = 1 for only calculating the (short) value of a date
+		
 		String[] split;
-		short date = 0;
-		short temp = 0;
-		dateString.toLowerCase();
+		int date = 0;
+		int temp = 0;
+		dateString = dateString.toLowerCase().replace(",", "");
 		
 		//try to determine separators and split up the date
 		if( dateString.contains("-") )
@@ -46,88 +57,109 @@ public class Entry {
 		//convert the date into a value depending on the input format
 		switch( Entry.format ){
 		case DMY:
-			temp = (short) Integer.parseInt(split[0]);
-			if( option == 0)
-				dateName = dateName + (int) temp;
+			//day
+			temp = Integer.parseInt(split[0]);
+			day = temp;
 			date += temp;
-
-			if( option == 0)
-				dateName = dateName + " ";
+			
+			//month
 			date += parseMonth(split[1], option);
-			temp = (short) Integer.parseInt(split[2]);
-			if( option == 0)
-				dateName = dateName + ", " + (int) temp;
+			
+			//year
+			temp = Integer.parseInt(split[2]);
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
 			break;
 		case DYM:
-			temp = Byte.parseByte(split[0]);
-			if( option == 0)
-				dateName = dateName + (int) temp;
+			//day
+			temp = Integer.parseInt(split[0]);
+			day = temp;
 			date += temp;
-			temp = Byte.parseByte(split[1]);
-			if( option == 0)
-				dateName = dateName + " " + (int) temp;
+			
+			//year
+			temp = Integer.parseInt(split[1]);
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
-			if( option == 0)
-				dateName = dateName + " ";
+			
+			//month
 			date += parseMonth(split[2], option);
 			break;
 		case MDY:
+			//month
 			date += parseMonth(split[0], option);
-			temp = Byte.parseByte(split[1]);
-			if( option == 0)
-				dateName = dateName + " " + (int) temp;
+			
+			//day
+			temp = Integer.parseInt(split[1]);
+			day = temp;
 			date += temp;
-			temp = Byte.parseByte(split[2]);
-			if( option == 0)
-				dateName = dateName +  ", " + (int) temp;
-			date += temp << 8;
+			
+			//year
+			temp = Integer.parseInt(split[2]);
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
+			date += temp << 10;
 			break;
 		case MYD:
+			//month
 			date += parseMonth(split[0], option);
-			temp = Byte.parseByte(split[1]);
-			if( option == 0)
-				dateName = dateName +  ", " + (int) temp;
+			
+			//year
+			temp = Integer.parseInt(split[1]);
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
-			temp += Byte.parseByte(split[2]);
-			if( option == 0)
-				dateName = dateName +  " " + (int) temp;
+			
+			//day
+			temp = Integer.parseInt(split[2]);
 			date += temp;
+			day = temp;
 			break;
 		case YDM:
-			temp = Byte.parseByte(split[0]);
-			if( option == 0)
-				dateName = dateName + (int) temp + ",";
+			//year
+			temp = Integer.parseInt(split[0]);
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
-			temp = Byte.parseByte(split[1]);
-			if( option == 0)
-				dateName = dateName + " " + (int) temp;
+			
+			//day
+			temp = Integer.parseInt(split[1]);
+			day = temp;
 			date += temp;
-			if( option == 0)
-				dateName = dateName + " ";
+			
+			//month
 			date += parseMonth(split[2], option);
 			break;
 		case YMD:
-			temp = Byte.parseByte(split[0]);
-			if( option == 0)
-				dateName = dateName + ((int) temp) + ",";
+			//year
+			temp = Integer.parseInt(split[0]);
+			if( temp < 1000)
+				temp += 2000;
+			year = temp;
 			date += temp << 8;
-			if( option == 0)
-				dateName = dateName + " ";
+			
+			//month
 			date += parseMonth(split[1], option);
-			temp = Byte.parseByte(split[2]);
-			if( option == 0)
-				dateName = dateName +  " " + (int) temp;
+			
+			//day
+			temp = Integer.parseInt(split[2]);
+			day = temp;
 			date += temp;
 			break;
 		}
-		
+		makeName();
 		return date;
 	}
 	
-	private short parseMonth(String month, int option){
-		byte monthValue = -1;
-		month = month.toLowerCase().replace(" ", "").replace(",", "");
+	private int parseMonth(String month, int option){
+		int monthValue = -1;
+		month = month.toLowerCase().replace(" ", "");
 		
 		if( month.contains("oc")  || month.contains("10") )
 			monthValue = 9;
@@ -154,13 +186,40 @@ public class Entry {
 		else if( month.contains("se")  || month.contains("9")  )
 			monthValue = 8;
 		
-		if( option == 0 )
-			dateName = dateName + dateList[monthValue];
-		monthValue *= 16;
+//		if( option == 0 )
+//			dateName = dateName + dateList[monthValue];
+		this.month = dateList[monthValue];
+		monthValue *= 64;
 		return monthValue;
 	}
+	
+	public void makeName(){
+		switch (format){ 
+		case DMY:
+			dateName = String.format(day +" " + month + ", " + year);
+			break;
+		case DYM:
+			dateName = String.format(day +", " + year + " " + month);
+			break;
+		case MDY:
+			dateName = String.format(month +" " + day + ", " + year);
+			break;
+		case MYD:
+			dateName = String.format(month +" " + year + ", " + day);
+			break;
+		case YMD:
+			dateName = String.format(year + ", " + month +" " + day);
+			break;
+		case YDM:
+			dateName = String.format(year + ", " + day +" " + month);
+			break;
+			default:
+				break;
+				
+		}
+	}
 
-	public short getDate(){
+	public int getDate(){
 		return date;
 	}
 	
@@ -168,7 +227,53 @@ public class Entry {
 		return dateName;
 	}
 	
-	public HashSet<String> getList(){
+	public void setFormat(int a){
+		format = a;
+		makeName();
+	}
+	public HashMap<String, DateEntry> getList(){
 		return data;
+	}
+	
+	public static void nextDay(){
+		today.roll(Calendar.DAY_OF_MONTH, true);
+		if(today.get(Calendar.DAY_OF_MONTH) == 1){
+			today.roll(Calendar.MONTH, true);
+			if( today.get(Calendar.MONTH) == 0)
+				today.roll(Calendar.YEAR, true);
+		}
+	}
+	public static void resetDay(){
+		today = Calendar.getInstance();
+	}
+	public static String getToday(){
+		int day = today.get(Calendar.DAY_OF_MONTH);
+		int month = today.get(Calendar.MONTH) + 1;
+		int year = today.get(Calendar.YEAR);
+		
+		switch (format){ 
+		case DMY:
+			return String.format(day +" " + month + ", " + year);
+		case DYM:
+			return String.format(day +", " + year + " " + month);
+		case MDY:
+			return String.format(month +" " + day + ", " + year);
+		case MYD:
+			return String.format(month +" " + year + ", " + day);
+		case YMD:
+			return String.format(year + ", " + month +" " + day);
+		case YDM:
+			return String.format(year + ", " + day +" " + month);
+			default:
+				return "";
+				
+		}
+		
+	}
+
+	@Override
+	public int compareTo(Integer o) {
+		
+		return date - o;
 	}
 }

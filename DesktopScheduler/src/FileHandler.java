@@ -70,11 +70,13 @@ public class FileHandler {
 			while(reader.ready()){
 				input = reader.readLine();
 				split = input.split(separator);
-				list.add(split[0], split[1]);
+				list.add(split[0], split[1], split[2]);
 			}
 			reader.close();
 		} catch (IOException e) {
 			System.out.println("Error reading from file");
+		} catch(NumberFormatException e) {
+			System.out.println("Error reading format integer");			
 		}
 	}
 	
@@ -88,7 +90,7 @@ public class FileHandler {
 			writer.write("" + Entry.format);
 			writer.newLine();
 			for(Entry a: list.getList().values()){
-				for(String b: a.getList()){
+				for(DateEntry b: a.getList().values()){
 					writer.write(String.format("%s%s%s", a.getName(), separator, b));
 					writer.newLine();
 				}
