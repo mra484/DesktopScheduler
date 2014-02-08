@@ -183,12 +183,14 @@ public class ControlPanel extends JPanel{
 		}
 		list.add(date.getText(), title.getText(), memo.getText());	
 		updateControlPanel();
+		filer.saveData();
 	}
 	
 	public void delete(){
 		//deletes the selected entry
 		list.delete();
 		clearControlPanel();
+		filer.saveData();
 	}
 
 	public void updateControlPanel(){

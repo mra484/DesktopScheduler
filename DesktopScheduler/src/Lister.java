@@ -53,6 +53,7 @@ public class Lister extends JScrollPane{
 	private HashMap<Integer, String> dateIndex = new HashMap<Integer, String>();
 	private HashSet<Integer> spaceIndex = new HashSet<Integer>();
 	private Entry current = new Entry("1/1/1");
+	private Entry empty = new Entry("1/1/1");
 	
 	private NewCellRenderer cr = new NewCellRenderer();
 	private KeyHandler key = new KeyHandler();
@@ -108,7 +109,7 @@ public class Lister extends JScrollPane{
 			index--;
 		
 		//using the date index that was just found, retrieve the date name then the date object
-		current = dateList.get(current.parseDate(dateIndex.get(index), 1));
+		current = dateList.get(empty.parseDate(dateIndex.get(index), 1));
 		
 		//remove from the event list of the date and delete date object if empty
 		current.getList().remove(data);
@@ -242,7 +243,7 @@ public class Lister extends JScrollPane{
 			
 			//update the display information for the current selection
 			date = list.getModel().getElementAt(index0);
-			dateValue = current.parseDate(date, 1);
+			dateValue = empty.parseDate(date, 1);
 			control.update(dateList.get(dateValue), list.getSelectedValue());			
 		}
 	}
@@ -274,6 +275,7 @@ public class Lister extends JScrollPane{
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			//popup on double click
+			System.out.println("listcheck");
 			if( e.getClickCount() == 2){
 				new DialogWindow(main, new ControlPanel(control, 0), DialogWindow.EDIT_WINDOW);				
 			}
