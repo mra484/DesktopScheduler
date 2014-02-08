@@ -70,7 +70,7 @@ public class Entry implements Comparable<Integer>{
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
-			date += temp << 8;
+			date += temp << 10;
 			break;
 		case DYM:
 			//day
@@ -83,7 +83,7 @@ public class Entry implements Comparable<Integer>{
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
-			date += temp << 8;
+			date += temp << 10;
 			
 			//month
 			date += parseMonth(split[2], option);
@@ -113,7 +113,7 @@ public class Entry implements Comparable<Integer>{
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
-			date += temp << 8;
+			date += temp << 10;
 			
 			//day
 			temp = Integer.parseInt(split[2]);
@@ -126,7 +126,7 @@ public class Entry implements Comparable<Integer>{
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
-			date += temp << 8;
+			date += temp << 10;
 			
 			//day
 			temp = Integer.parseInt(split[1]);
@@ -142,7 +142,7 @@ public class Entry implements Comparable<Integer>{
 			if( temp < 1000)
 				temp += 2000;
 			year = temp;
-			date += temp << 8;
+			date += temp << 10;
 			
 			//month
 			date += parseMonth(split[1], option);
@@ -186,8 +186,6 @@ public class Entry implements Comparable<Integer>{
 		else if( month.contains("se")  || month.contains("9")  )
 			monthValue = 8;
 		
-//		if( option == 0 )
-//			dateName = dateName + dateList[monthValue];
 		this.month = dateList[monthValue];
 		monthValue *= 64;
 		return monthValue;
