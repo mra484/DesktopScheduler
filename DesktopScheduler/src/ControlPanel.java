@@ -26,6 +26,12 @@ import java.awt.event.WindowListener;
 
 public class ControlPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
+	public static final int STATUS_SUCCESS = 0;
+	public static final int STATUS_MISS_DATE = 1;
+	public static final int STATUS_MISS_TITLE = 2;
+	public static final int STATUS_EDIT = 3;
+	public static final int STATUS_DELETE = 4;
+	public static final int STATUS_DELETE_FAIL = 5;
 	
 	private Lister list;
 	private FileHandler filer;
@@ -38,6 +44,7 @@ public class ControlPanel extends JPanel{
 	private JTextField date = new JTextField();
 	private JTextField title = new JTextField();
 	private JTextArea memo = new JTextArea(4, 4);
+	private JLabel status = new JLabel(" ");
 	private JLabel dateLabel = new JLabel("Date:");
 	private JLabel titleLabel = new JLabel("Enter event name below:");
 	private JLabel memoLabel = new JLabel("Enter additional information below:");
@@ -83,6 +90,7 @@ public class ControlPanel extends JPanel{
 		date.addMouseListener(highlight);
 		title.addMouseListener(highlight);
 		memo.addMouseListener(highlight);
+		memo.setLineWrap(true);
 		
 		setLayout(new GridBagLayout());
 		arrange();
@@ -121,12 +129,17 @@ public class ControlPanel extends JPanel{
 	}
 	public void arrange(){
 		c.fill = GridBagConstraints.HORIZONTAL;
-		
-		//add button
+		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(0,0,10,0);
+		add(status, c);
+		
+		//add button
+		c.gridwidth = 1;
+		c.gridx = 0;
+		c.gridy = 1;
 		add(add, c);
 		
 		//delete button
@@ -140,7 +153,7 @@ public class ControlPanel extends JPanel{
 		//date label
 		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(0,0,0,0);
-		c.gridy = 1;
+		c.gridy = 2;
 		c.gridx = 0;
 		c.gridwidth = 1;
 		add(dateLabel, c);
@@ -153,22 +166,22 @@ public class ControlPanel extends JPanel{
 		
 		//title label
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 3;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		add(titleLabel, c);
 		
 		//title field
-		c.gridy = 3;
+		c.gridy = 4;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(title, c);
 		
 		//memo label
-		c.gridy = 4;
+		c.gridy = 5;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		add(memoLabel, c);
 		
 		//memo field
-		c.gridy = 5;
+		c.gridy = 6;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.fill = GridBagConstraints.BOTH;
 		add(memoArea, c);
@@ -176,12 +189,19 @@ public class ControlPanel extends JPanel{
 	
 	public void add(){
 		//add information in the controlpanel fields as a new event
-		//ignore if date is empty
+		//ignore if date or title is empty
 		if( date.getText().compareTo("") == 0 ){
+			setStatus(STATUS_MISS_DATE);
 			System.out.println("Please Enter a date");
 			return;
 		}
+		if( title.getText().replace(" ", "").compareTo("") == 0 ){
+			setStatus(STATUS_MISS_TITLE);
+			System.out.println("Please Enter a title");
+			return;
+		}
 		list.add(date.getText(), title.getText(), memo.getText());	
+		setStatus(STATUS_SUCCESS);
 		updateControlPanel();
 		filer.saveData();
 	}
@@ -190,6 +210,7 @@ public class ControlPanel extends JPanel{
 		//deletes the selected entry
 		list.delete();
 		clearControlPanel();
+		setStatus(STATUS_DELETE);
 		filer.saveData();
 	}
 
@@ -219,6 +240,45 @@ public class ControlPanel extends JPanel{
 		field.setSelectionStart(0);
 		field.setSelectionEnd(field.getText().length());
 	}
+	public void setStatus(int i){
+		switch (i){
+		case STATUS_SUCCESS:
+			status.setForeground(Color.GREEN);
+			status.setText("Successfully added new event");
+			break;
+		case STATUS_MISS_DATE:
+			status.setForeground(Color.RED);
+			status.setText("Please enter a valid date");
+			
+			break;
+		case STATUS_MISS_TITLE:
+			status.setForeground(Color.RED);
+			status.setText("Please enter a title");
+			break;
+		case STATUS_EDIT:
+			status.setForeground(Color.GREEN);
+			status.setText("Successfully updated event");
+			
+			break;
+		case STATUS_DELETE:
+			status.setForeground(Color.GREEN);
+			status.setText("Successfully deleted event");
+			
+			break;
+		case STATUS_DELETE_FAIL:
+			status.setForeground(Color.RED);
+			status.setText("Unable to delete selected event");
+			break;
+		default:
+			status.setForeground(Color.RED);
+			status.setText("Unknown message type");
+			break;
+		}
+		
+	}
+	public void clearStatus(){
+		status.setText(" ");
+	}
 	
 	private class ActionHandler implements ActionListener{
 		public void actionPerformed(ActionEvent e){
@@ -242,6 +302,7 @@ public class ControlPanel extends JPanel{
 
 		@Override
 		public void mouseClicked(MouseEvent e) {	
+			clearStatus();
 			Object source = e.getSource();
 			if( source == lastSelected)
 				return;
