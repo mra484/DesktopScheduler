@@ -207,7 +207,8 @@ public class ControlPanel extends JPanel{
 			System.out.println("Please Enter a title");
 			return;
 		}
-		list.add(date.getText(), title.getText(), memo.getText());	
+		if( !list.add(date.getText(), title.getText(), memo.getText()))
+			return;
 		setStatus(STATUS_SUCCESS);
 		updateControlPanel();
 		filer.saveData();

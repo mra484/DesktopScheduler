@@ -80,8 +80,8 @@ public class Lister extends JScrollPane{
 	}
 	
 	public boolean add(String date, String data, String memo){
+		try{
 		Entry current = new Entry(date);
-		
 		//create new date entry if not present
 		if( !dateList.containsKey(current.getDate()) ){
 			dateList.put(current.getDate(), current);
@@ -92,6 +92,10 @@ public class Lister extends JScrollPane{
 		current.add(data, memo);
 		updateList();
 		return true;		
+		} catch (ArrayIndexOutOfBoundsException e) {
+			control.setStatus(ControlPanel.STATUS_MISS_DATE);
+			return false;
+		}
 	}
 	
 	public boolean delete(){
