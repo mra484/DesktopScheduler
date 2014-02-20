@@ -44,7 +44,7 @@ public class DialogWindow extends JDialog{
 		private MainWindow mainWindow;
 		
 		//option dialog window components
-		private JLabel[] optionNames = {new JLabel("Display empty dates:")};
+		private JLabel[] optionNames = {new JLabel("Display empty dates:"), new JLabel("Confirm delete:")};
 		private JCheckBox[] optionBoxes;
 		private JLabel dateFormatLabel = new JLabel("Display format:");
 		private JComboBox<String> dateFormat = new JComboBox<String>();
@@ -62,7 +62,7 @@ public class DialogWindow extends JDialog{
 		//option window constructor
 		public DialogWindow(MainWindow mainWindow){
 			this.mainWindow = mainWindow;
-			setSize(290, 130);
+			setSize(290, 160);
 			setVisible(false);
 			setLocation(new Point(mainWindow.getX()+50, mainWindow.getY()+50));
 			createComboBox();
@@ -97,6 +97,7 @@ public class DialogWindow extends JDialog{
 					optionBoxes[i].addActionListener(actions);
 				}
 				optionBoxes[0].setSelected(MainWindow.emptyDates);
+				optionBoxes[1].setSelected(MainWindow.deleteDialog);
 			}
 			//adds action listener to buttons and adds buttons to panel
 			for( i = 0 ; i < buttons.length ; i++ ){
@@ -116,7 +117,7 @@ public class DialogWindow extends JDialog{
 				
 				//list each option
 				for( i = 0 ; i < optionNames.length ; i++ ){
-					c.gridx = i;
+					c.gridx = 0;
 					c.gridy = i;
 					optionPanel.add(optionNames[i], c);
 					
@@ -182,6 +183,9 @@ public class DialogWindow extends JDialog{
 					case 0:
 						MainWindow.emptyDates = optionBoxes[i].isSelected();
 						break;
+					case 1:
+						MainWindow.deleteDialog = optionBoxes[i].isSelected();
+						break;
 					default:
 						System.out.println("unformatted option selected");
 					}
@@ -193,13 +197,13 @@ public class DialogWindow extends JDialog{
 				case DELETE_WINDOW:
 					//"Yes" selected from delete window, close on no
 					if( e.getSource() == buttons[0] )
-						control.delete();
+						control.deleteEntry();
 					break;
 					
 				case EDIT_WINDOW:
 					//"edit" selected from the edit window, close on cancel
 					if( e.getSource() == buttons[0] ){
-						control.delete();
+						control.deleteEntry();
 						control.add();
 					}
 					break;

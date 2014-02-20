@@ -257,7 +257,7 @@ public class Lister extends JScrollPane{
 			//add behavior for delete and enter
 			switch (e.getKeyCode()){
 			case KeyEvent.VK_DELETE:
-				new DialogWindow(main, new ControlPanel(control, 0), DialogWindow.DELETE_WINDOW);
+				control.delete();
 				break;
 			case KeyEvent.VK_ENTER:
 				new DialogWindow(main, new ControlPanel(control, 0), DialogWindow.EDIT_WINDOW);

@@ -15,6 +15,7 @@ public class MainWindow extends JFrame{
 	public static boolean emptyDates = false;
 	public static String today;
 	public static int maxEntries = 31;
+	public static boolean deleteDialog = true;
 	
 	private JList<String> list = new JList<String>();
 	private Lister lister = new Lister(list, this);

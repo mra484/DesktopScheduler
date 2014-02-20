@@ -209,8 +209,15 @@ public class ControlPanel extends JPanel{
 		updateControlPanel();
 		filer.saveData();
 	}
-	
+
 	public void delete(){
+		//deletes the selected entry
+		if(MainWindow.deleteDialog )
+			new DialogWindow(mainWindow, new ControlPanel(this, 0), DialogWindow.DELETE_WINDOW);
+		else
+			deleteEntry();
+	}
+	public void deleteEntry(){
 		//deletes the selected entry
 		list.delete();
 		clearControlPanel();
