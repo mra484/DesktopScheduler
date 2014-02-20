@@ -275,6 +275,7 @@ public class Lister extends JScrollPane{
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			//popup on double click
+			control.deFocus();
 			System.out.println("listcheck");
 			if( e.getClickCount() == 2){
 				new DialogWindow(main, new ControlPanel(control, 0), DialogWindow.EDIT_WINDOW);				

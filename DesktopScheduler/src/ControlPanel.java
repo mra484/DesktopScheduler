@@ -192,6 +192,9 @@ public class ControlPanel extends JPanel{
 	}
 	
 	public void add(){
+		//clears select history on add
+		deFocus();
+		
 		//add information in the controlpanel fields as a new event
 		//ignore if date or title is empty
 		if( date.getText().compareTo("") == 0 ){
@@ -211,6 +214,9 @@ public class ControlPanel extends JPanel{
 	}
 
 	public void delete(){
+		//clear select history on delete
+		deFocus();
+		
 		//deletes the selected entry
 		if(MainWindow.deleteDialog )
 			new DialogWindow(mainWindow, new ControlPanel(this, 0), DialogWindow.DELETE_WINDOW);
@@ -223,6 +229,10 @@ public class ControlPanel extends JPanel{
 		clearControlPanel();
 		setStatus(STATUS_DELETE);
 		filer.saveData();
+	}
+	
+	public void deFocus(){
+		lastSelected = null;
 	}
 
 	public void updateControlPanel(){
