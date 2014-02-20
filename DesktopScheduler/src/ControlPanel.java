@@ -67,7 +67,7 @@ public class ControlPanel extends JPanel{
 		date.addMouseListener(highlight);
 		title.addMouseListener(highlight);
 		memo.addMouseListener(highlight);
-		
+		status.setText("");
 		
 		setLayout(new GridBagLayout());
 		arrange();

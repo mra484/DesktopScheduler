@@ -53,7 +53,7 @@ public class DialogWindow extends JDialog{
 		private Entry dateName = new Entry("1/1/1");
 		
 		//entry dialog window components
-		private String questionString = "Are you sure you want to delete the selected event?";
+		private String questionString = " ";
 		private JLabel question = new JLabel(String.format("<html><div style=\"width:%dpx;\">%s</div><html>", 180, questionString));
 		private JButton[] buttons = {new JButton("Yes"), new JButton("No")};
 		private JPanel buttonPanel = new JPanel();
@@ -84,6 +84,11 @@ public class DialogWindow extends JDialog{
 			arrangeWindow();
 		}
 		
+		public void newString(String a){
+
+			questionString = a;
+			question = new JLabel(String.format("<html><div style=\"width:%dpx;\">%s</div><html>", 180, questionString));
+		}
 		public void arrangeWindow(){
 			int i = 0;
 			setLayout(new BorderLayout());
@@ -136,6 +141,7 @@ public class DialogWindow extends JDialog{
 				break;
 				
 			case DELETE_WINDOW:
+				newString("Are you sure you want to delete the selected event?");
 				setTitle("Confirm event delete");
 				control.makeFinal();
 				add(question, BorderLayout.NORTH);
@@ -144,9 +150,11 @@ public class DialogWindow extends JDialog{
 				break;
 				
 			case EDIT_WINDOW:
+				newString("Make changes to the entry below:");
 				setTitle("Edit the current event");
 				buttons[0].setText("Edit");
 				buttons[1].setText("Cancel");
+				add(question, BorderLayout.NORTH);
 				add(control, BorderLayout.CENTER);
 				add(buttonPanel, BorderLayout.SOUTH);
 			}
