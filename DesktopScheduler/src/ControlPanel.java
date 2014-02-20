@@ -54,6 +54,7 @@ public class ControlPanel extends JPanel{
 	
 	private ControlPanel originalControl = this;
 	private ActionHandler action = new ActionHandler();
+	private Keyboard keys = new Keyboard();
 	private Mouse highlight = new Mouse();
 	private GridBagConstraints c = new GridBagConstraints();
 	
@@ -66,6 +67,7 @@ public class ControlPanel extends JPanel{
 		date.addMouseListener(highlight);
 		title.addMouseListener(highlight);
 		memo.addMouseListener(highlight);
+		
 		
 		setLayout(new GridBagLayout());
 		arrange();
@@ -91,6 +93,8 @@ public class ControlPanel extends JPanel{
 		title.addMouseListener(highlight);
 		memo.addMouseListener(highlight);
 		memo.setLineWrap(true);
+		date.addKeyListener(keys);
+		title.addKeyListener(keys);
 		
 		setLayout(new GridBagLayout());
 		arrange();
@@ -296,6 +300,35 @@ public class ControlPanel extends JPanel{
 
 			filer.saveData();
 		}
+	}
+	
+	private class Keyboard implements KeyListener {
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if( e.getKeyCode() == KeyEvent.VK_ENTER ){
+				if( e.getSource() == title ){
+				add();
+				filer.saveData();
+				}
+				else {
+					title.requestFocus();
+				}
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 	
 	private class Mouse implements MouseListener{
