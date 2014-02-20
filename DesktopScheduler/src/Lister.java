@@ -72,7 +72,7 @@ public class Lister extends JScrollPane{
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setSelectionModel(new DisableSelectionModel());
 		setBackground(Color.WHITE);
-		setPreferredSize(new Dimension(290, MainWindow.windowHeight - 250));
+		//setPreferredSize(new Dimension(290, MainWindow.windowHeight - 250));
 	}	
 	
 	public void setControl(ControlPanel a){

@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.awt.Toolkit;
 
 public class MainWindow extends JFrame{
@@ -34,23 +35,30 @@ public class MainWindow extends JFrame{
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		setLayout(new GridBagLayout());
 		arrange();
 	}
 	
 	private void arrange(){
 		setLayout(new GridBagLayout());
-
+		Insets top = new Insets(10,0,0,0);
+		Insets bottom = new Insets(0,0,10,0);
+		
+		c.insets = top;
 		c.gridx = 0;
 		c.gridy = 0;
+		c.weighty = 99;
 		c.fill = GridBagConstraints.BOTH;
 		c.gridheight = GridBagConstraints.RELATIVE;
 		add(lister, c);
 		
-		c.fill = GridBagConstraints.BOTH;
+		c.insets = bottom;
+		c.fill = GridBagConstraints.NONE;
 		c.gridheight = GridBagConstraints.REMAINDER;
+		c.weighty = 1;
+		c.gridx = 0;
 		c.gridy = 1;
 		add(controls, c);		
+		
 	}
 	
 	public ControlPanel getControlPanel(){
