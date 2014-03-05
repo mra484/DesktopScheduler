@@ -1,3 +1,21 @@
+/**Desktop Schedule
+ * Copyright(C) 2014 Mark Andrews
+ * 
+ *   Desktop Scheduler is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   Desktop Scheduler is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *   
+ * Class for reading and writing to file
+ */
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -16,10 +34,12 @@ public class FileHandler {
 	private FileOutputStream ofs;
 	private OutputStreamWriter osw;
 	private BufferedWriter writer;
+	private MainWindow main;
 	private Lister list;
 	private String separator = "=";
 	
-	public FileHandler(Lister a){
+	public FileHandler(Lister a, MainWindow b){
+		main = b;
 		list = a;
 		if(openFileReader("data.txt"))
 			readData();
@@ -65,12 +85,40 @@ public class FileHandler {
 		String input;
 
 		try {
-			input = reader.readLine();
-			Entry.format = Integer.parseInt(input);
 			while(reader.ready()){
 				input = reader.readLine();
 				split = input.split(separator);
-				list.add(split[0], split[1], split[2]);
+				
+				//for reading format in old versions of the program
+				if(split.length == 1)
+					Entry.format = Integer.parseInt(split[0]);
+				
+				//read date format
+				else if(split[0].compareTo("Date_Format") == 0 )
+					Entry.format = Integer.parseInt(split[1]);
+				
+				//read diplay preference
+				else if( split[0].compareTo("Empty_Dates") == 0)
+					MainWindow.emptyDates = Boolean.parseBoolean(split[1]);
+				
+				//read whether or not to save window position
+				else if( split[0].compareTo("Position_Pref") == 0) {
+					MainWindow.positionPref = Boolean.parseBoolean(split[1]);
+					
+					input = reader.readLine();
+					split  = input.split(separator);
+					if(MainWindow.positionPref){
+					main.setBounds(Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]),
+							Integer.parseInt(split[4]));
+					}
+					
+				//read delete dialog preference
+				}else if( split[0].compareTo("Confirm_Delete") == 0 )
+					MainWindow.deleteDialog = Boolean.parseBoolean(split[1]);
+				
+				//add event to list
+				else
+					list.add(split[0], split[1], split[2]);
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -87,8 +135,22 @@ public class FileHandler {
 	//write data to file
 	private void writeData(){
 		try {
-			writer.write("" + Entry.format);
+			writer.write(String.format("%s%s%s", "Date_Format", separator, Entry.format));
 			writer.newLine();
+
+			writer.write(String.format("%s%s%s", "Empty_Dates", separator, MainWindow.emptyDates));
+			writer.newLine();
+			
+			writer.write(String.format("%s%s%s", "Confirm_Delete", separator, MainWindow.deleteDialog));
+			writer.newLine();
+			
+			writer.write(String.format("%s%s%s", "Position_Pref", separator, MainWindow.positionPref));
+			writer.newLine();
+			
+			writer.write(String.format("%s%s%s%s%s%s%s%s%s", "WindowXYWH", separator, main.getX(), separator,
+					main.getY(), separator, main.getWidth(), separator, main.getHeight()));
+			writer.newLine();
+			
 			for(Entry a: list.getList().values()){
 				for(DateEntry b: a.getList().values()){
 					writer.write(String.format("%s%s%s", a.getName(), separator, b));

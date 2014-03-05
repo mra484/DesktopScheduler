@@ -15,12 +15,13 @@ public class MainWindow extends JFrame{
 	public static int windowXPosition = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - windowWidth;
 	public static boolean emptyDates = false;
 	public static String today;
+	public static boolean positionPref = true;
 	public static int maxEntries = 31;
 	public static boolean deleteDialog = true;
 	
 	private JList<String> list = new JList<String>();
 	private Lister lister = new Lister(list, this);
-	private FileHandler filer = new FileHandler(lister);
+	private FileHandler filer = new FileHandler(lister, this);
 	private ControlPanel controls = new ControlPanel(lister, filer, this);
 	private GridBagConstraints c = new GridBagConstraints();
 	
@@ -30,8 +31,10 @@ public class MainWindow extends JFrame{
 		today = Entry.getToday();
 		System.out.println(today);
 		lister.setControl(controls);
-		this.setLocation(windowXPosition, 0);
-		setSize(windowWidth, windowHeight);
+		if(!positionPref){
+			this.setLocation(windowXPosition, 0);
+			setSize(windowWidth, windowHeight);
+		}
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
