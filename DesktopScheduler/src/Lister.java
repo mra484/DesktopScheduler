@@ -41,8 +41,8 @@ import javax.swing.plaf.basic.BasicListUI.ListSelectionHandler;
 public class Lister extends JScrollPane{
 	
 	private static final long serialVersionUID = 1L;
-	private Font titleFont = new Font("titleFont", Font.PLAIN, 10);
-	private Font dateFont = new Font("dateFont", Font.BOLD, 14);
+	private Font titleFont = new Font("titleFont", Font.PLAIN, MainWindow.titleSize);
+	private Font dateFont = new Font("dateFont", Font.BOLD, MainWindow.dateSize);
 	
 	//contains a list of dates with events
 	private TreeMap<Integer, Entry> dateList = new TreeMap<Integer, Entry>(); 
@@ -188,6 +188,14 @@ public class Lister extends JScrollPane{
 			a.makeName();
 		}
 		updateList();
+	}
+	
+	public void setDateSize(int size){
+		dateFont = dateFont.deriveFont( (float) size );
+	}
+	
+	public void setTitleSize(int size){
+		titleFont = titleFont.deriveFont( (float) size );
 	}
 	
 	public class NewCellRenderer extends DefaultListCellRenderer{

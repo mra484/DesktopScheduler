@@ -93,6 +93,12 @@ public class FileHandler {
 				if(split.length == 1)
 					Entry.format = Integer.parseInt(split[0]);
 				
+				//read font sizes
+				else if(split[0].compareTo("Font_Sizes") == 0 ){
+					MainWindow.dateSize = Integer.parseInt(split[1]);
+					MainWindow.titleSize = Integer.parseInt(split[2]);
+				}
+				
 				//read date format
 				else if(split[0].compareTo("Date_Format") == 0 )
 					Entry.format = Integer.parseInt(split[1]);
@@ -103,11 +109,11 @@ public class FileHandler {
 				
 				//read whether or not to save window position
 				else if( split[0].compareTo("Position_Pref") == 0) {
-					MainWindow.positionPref = Boolean.parseBoolean(split[1]);
+					MainWindow.positionPref = Integer.parseInt(split[1]);
 					
 					input = reader.readLine();
 					split  = input.split(separator);
-					if(MainWindow.positionPref){
+					if(MainWindow.positionPref == MainWindow.CUSTOM_WINDOW){
 					main.setBounds(Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]),
 							Integer.parseInt(split[4]));
 					}
@@ -139,6 +145,10 @@ public class FileHandler {
 			writer.newLine();
 
 			writer.write(String.format("%s%s%s", "Empty_Dates", separator, MainWindow.emptyDates));
+			writer.newLine();
+			
+			writer.write(String.format("%s%s%s%s%s", "Font_Sizes", separator, MainWindow.dateSize, separator,
+					MainWindow.titleSize));
 			writer.newLine();
 			
 			writer.write(String.format("%s%s%s", "Confirm_Delete", separator, MainWindow.deleteDialog));

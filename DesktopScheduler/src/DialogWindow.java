@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,6 +49,13 @@ public class DialogWindow extends JDialog{
 		private JCheckBox[] optionBoxes;
 		private JLabel dateFormatLabel = new JLabel("Display format:");
 		private JComboBox<String> dateFormat = new JComboBox<String>();
+		private JLabel positionLabel = new JLabel("Window Position");
+		private JComboBox<String> position = new JComboBox<String>();
+		private JLabel dateSizeLabel = new JLabel("Date text size:");
+		private JComboBox<Integer> dateSize = new JComboBox<Integer>();
+		private JLabel titleSizeLabel = new JLabel("Title text size:");
+		private JComboBox<Integer> titleSize = new JComboBox<Integer>();
+		
 		private JPanel optionPanel = new JPanel();
 		private GridBagConstraints c = new GridBagConstraints();
 		private Entry dateName = new Entry("1/1/1");
@@ -62,11 +70,28 @@ public class DialogWindow extends JDialog{
 		//option window constructor
 		public DialogWindow(MainWindow mainWindow){
 			this.mainWindow = mainWindow;
-			setSize(290, 160);
-			setVisible(false);
-			setLocation(new Point(mainWindow.getX()+50, mainWindow.getY()+50));
-			createComboBox();
 			option = OPTION_WINDOW;
+			setSize(290, 280);
+			setVisible(false);
+			
+			//create jcombobox for date format
+			createDateFormatBox();
+			
+			//create jcombobox for window position
+			createPositionBox();
+			position.setSelectedIndex(MainWindow.positionPref);
+			
+			//create jcombobox for date font size
+			createSizeBox(dateSize);
+			dateSize.setSelectedItem(MainWindow.dateSize);
+			
+			//create jcombobox for title font size
+			createSizeBox(titleSize);
+			titleSize.setSelectedItem(MainWindow.titleSize);
+			
+			//create jcheckboxes
+			createCheckBoxes();
+			
 			arrangeWindow();
 		}
 		
@@ -75,13 +100,13 @@ public class DialogWindow extends JDialog{
 			this.option = option;
 			control = controlPanel;
 			setSize(230, 260);
-			setVisible(true);
-			setLocation(new Point(mainWindow.getX()+100, mainWindow.getY()+100));
 
 			setModal(true);
 			setModalityType(ModalityType.APPLICATION_MODAL);
 			
 			arrangeWindow();
+			setLocation(new Point(mainWindow.getX()+25, mainWindow.getY()+50));
+			setVisible(true);
 		}
 		
 		public void newString(String a){
@@ -89,9 +114,90 @@ public class DialogWindow extends JDialog{
 			questionString = a;
 			question = new JLabel(String.format("<html><div style=\"width:%dpx;\">%s</div><html>", 180, questionString));
 		}
+		
 		public void arrangeWindow(){
 			int i = 0;
 			setLayout(new BorderLayout());
+			createCheckBoxes();
+			
+			//Create window appearance depending on the situation
+			switch (option) {
+			case OPTION_WINDOW:
+				setTitle("Options");
+				buttons[1].setText("Close");
+				buttonPanel.remove(buttons[0]);
+				optionPanel.setLayout(new GridBagLayout());
+				c.fill = GridBagConstraints.NONE;
+				c.anchor = GridBagConstraints.NORTHWEST;
+				c.insets = new Insets(10,0,0,0);
+				
+				//list each option
+				for( i = 0 ; i < optionNames.length ; i++ ){
+					c.gridx = 0;
+					c.gridy = i;
+					optionPanel.add(optionNames[i], c);
+					
+					c.gridx = 1;
+					optionPanel.add(optionBoxes[i], c);
+				}
+				c.gridx = 0;
+				c.gridy = i+1;
+				optionPanel.add(dateFormatLabel, c);
+				
+				c.gridx = 1;
+				optionPanel.add(dateFormat, c);
+
+				c.gridx = 0;
+				c.gridy = i+2;
+				optionPanel.add(positionLabel, c);
+				
+				c.gridx = 1;
+				optionPanel.add(position, c);
+
+				c.gridx = 0;
+				c.gridy = i+3;
+				optionPanel.add(dateSizeLabel, c);
+				
+				c.gridx = 1;
+				optionPanel.add(dateSize, c);
+
+				c.gridx = 0;
+				c.gridy = i+4;
+				optionPanel.add(titleSizeLabel, c);
+				
+				c.gridx = 1;
+				optionPanel.add(titleSize, c);
+				
+				add(optionPanel, BorderLayout.WEST);
+				add(buttonPanel, BorderLayout.SOUTH);
+				break;
+				
+			case DELETE_WINDOW:
+				newString("Are you sure you want to delete the selected event?");
+				setTitle("Confirm event delete");
+				
+				//makes control panel fields uneditable
+				control.makeFinal();
+				
+				add(question, BorderLayout.NORTH);
+				add(control, BorderLayout.CENTER);
+				add(buttonPanel, BorderLayout.SOUTH);
+				break;
+				
+			case EDIT_WINDOW:
+				newString("Make changes to the entry below:");
+				setTitle("Edit the current event");
+				buttons[0].setText("Edit");
+				buttons[1].setText("Cancel");
+				add(question, BorderLayout.NORTH);
+				add(control, BorderLayout.CENTER);
+				add(buttonPanel, BorderLayout.SOUTH);
+			}
+		}
+		
+		private void createCheckBoxes(){
+
+			int i = 0;
 			buttonPanel.setLayout(new FlowLayout());
 			
 			//create check boxes
@@ -110,56 +216,9 @@ public class DialogWindow extends JDialog{
 				buttonPanel.add(buttons[i]);
 			}
 			
-			//Create window appearance depending on the situation
-			switch (option) {
-			case OPTION_WINDOW:
-				setTitle("Options");
-				buttons[1].setText("Close");
-				buttonPanel.remove(buttons[0]);
-				optionPanel.setLayout(new GridBagLayout());
-				c.fill = GridBagConstraints.NONE;
-				c.anchor = GridBagConstraints.NORTHWEST;
-				
-				//list each option
-				for( i = 0 ; i < optionNames.length ; i++ ){
-					c.gridx = 0;
-					c.gridy = i;
-					optionPanel.add(optionNames[i], c);
-					
-					c.gridx = 1;
-					optionPanel.add(optionBoxes[i], c);
-				}
-				c.gridx = 0;
-				c.gridy = i+1;
-				optionPanel.add(dateFormatLabel, c);
-				
-				c.gridx = 1;
-				optionPanel.add(dateFormat, c);
-				
-				add(optionPanel, BorderLayout.WEST);
-				add(buttonPanel, BorderLayout.SOUTH);
-				break;
-				
-			case DELETE_WINDOW:
-				newString("Are you sure you want to delete the selected event?");
-				setTitle("Confirm event delete");
-				control.makeFinal();
-				add(question, BorderLayout.NORTH);
-				add(control, BorderLayout.CENTER);
-				add(buttonPanel, BorderLayout.SOUTH);
-				break;
-				
-			case EDIT_WINDOW:
-				newString("Make changes to the entry below:");
-				setTitle("Edit the current event");
-				buttons[0].setText("Edit");
-				buttons[1].setText("Cancel");
-				add(question, BorderLayout.NORTH);
-				add(control, BorderLayout.CENTER);
-				add(buttonPanel, BorderLayout.SOUTH);
-			}
 		}
-		private void createComboBox(){
+		
+		private void createDateFormatBox(){
 			int temp = Entry.format;
 			Entry dateName = new Entry("1/1/1");
 			for(int i = 0 ; i < 6 ; i++ ){
@@ -170,17 +229,66 @@ public class DialogWindow extends JDialog{
 			dateFormat.addActionListener(actions);
 			dateFormat.setSelectedIndex(Entry.format);
 		}
+		
+		private void createPositionBox(){
+			position.insertItemAt("Position Right", MainWindow.RIGHT_WINDOW);
+			position.insertItemAt("Position Left", MainWindow.LEFT_WINDOW);
+			position.insertItemAt("Custom", MainWindow.CUSTOM_WINDOW);
+			position.addActionListener(actions);
+		}
+		
+		private void createSizeBox(JComboBox<Integer> sizeBox){
+			sizeBox.setEditable(true);
+			sizeBox.addItem(6);
+			sizeBox.addItem(7);
+			sizeBox.addItem(8);
+			sizeBox.addItem(10);
+			sizeBox.addItem(12);
+			sizeBox.addItem(14);
+			sizeBox.addItem(18);
+			sizeBox.addItem(24);
+			sizeBox.addItem(32);
+			sizeBox.addItem(64);
+			sizeBox.addItem(72);			
+			sizeBox.addActionListener(actions);
+		}
+		
+		public void update(){
+			position.setSelectedIndex(MainWindow.positionPref);
+			dateSize.setSelectedItem(MainWindow.dateSize);
+			titleSize.setSelectedItem(MainWindow.titleSize);
+		}
+		
 		private class Actions implements ActionListener{
 			public void actionPerformed(ActionEvent e){
 				Object source = e.getSource();
-				
+
 				//change in dateFormat
 				if(source == dateFormat){
 					dateName.setFormat(dateFormat.getSelectedIndex());
 					mainWindow.updateDateNames();
 					return;
-					
-				//change in other options
+
+					//change position preference
+				}else if(source == position){
+					MainWindow.positionPref = position.getSelectedIndex();
+					mainWindow.setWindow();
+					mainWindow.updateDateNames();
+					return;
+
+					//change date font size
+				}else if(source == dateSize){
+					mainWindow.setDateSize( (Integer) dateSize.getSelectedItem());
+					mainWindow.updateDateNames();
+					return;
+
+				//change title font size
+				}else if(source == titleSize){
+					mainWindow.setTitleSize( (Integer) titleSize.getSelectedItem());
+					mainWindow.updateDateNames();
+					return;
+
+					//change in other options
 				} else if (source instanceof JCheckBox) {
 					int i;
 					for(i = 0 ; i < optionNames.length ; i++){
@@ -189,11 +297,15 @@ public class DialogWindow extends JDialog{
 					}
 					switch(i){
 					case 0:
+						//change in empty date checkbox
 						MainWindow.emptyDates = optionBoxes[i].isSelected();
 						break;
+						
 					case 1:
+						//change in delete confirmation checkbox
 						MainWindow.deleteDialog = optionBoxes[i].isSelected();
 						break;
+						
 					default:
 						System.out.println("unformatted option selected");
 					}

@@ -15,6 +15,7 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -130,6 +131,9 @@ public class ControlPanel extends JPanel{
 		date.setEditable(false);
 		title.setEditable(false);
 		memo.setEditable(false);
+	}
+	public void updateOptions(){
+		optionWindow.update();
 	}
 	public void arrange(){
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -311,6 +315,7 @@ public class ControlPanel extends JPanel{
 			} else if( source == delete) {
 				delete();
 			} else if( source == option) {
+				optionWindow.setLocation(new Point(mainWindow.getX()+25, mainWindow.getY()+50));
 				optionWindow.setVisible(true);
 			} else {
 				lastSelected = (JTextComponent) source;
