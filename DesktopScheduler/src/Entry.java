@@ -244,6 +244,10 @@ public class Entry implements Comparable<Integer>{
 	public static void resetDay(){
 		today = Calendar.getInstance();
 	}
+	
+	public static int getDayOfWeek(){
+		return today.get(Calendar.DAY_OF_WEEK);
+	}
 	public static String getToday(){
 		int day = today.get(Calendar.DAY_OF_MONTH);
 		int month = today.get(Calendar.MONTH) + 1;

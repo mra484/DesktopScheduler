@@ -52,6 +52,7 @@ public class Lister extends JScrollPane{
 	//contains a list of indexes containing a date or a space
 	private HashMap<Integer, String> dateIndex = new HashMap<Integer, String>();
 	private HashSet<Integer> spaceIndex = new HashSet<Integer>();
+	private HashSet<Integer> colorList = new HashSet<Integer>();
 	private Entry current = new Entry("1/1/1");
 	private Entry empty = new Entry("1/1/1");
 	
@@ -129,6 +130,28 @@ public class Lister extends JScrollPane{
 		return dateList;
 	}
 	
+	public boolean colorDay(int day){
+
+		switch(day){
+		case Calendar.SUNDAY:
+			return true;
+		case Calendar.MONDAY:
+			break;
+		case Calendar.TUESDAY:
+			break;
+		case Calendar.WEDNESDAY:
+			break;
+		case Calendar.THURSDAY:
+			break;
+		case Calendar.FRIDAY:
+			break;
+		case Calendar.SATURDAY:
+			break;
+		default:
+			break;
+		}
+		return false;
+	}
 	public void updateList(){
 		DefaultListModel<String> m = new DefaultListModel<String>();
 		int i = 0;
@@ -139,12 +162,14 @@ public class Lister extends JScrollPane{
 		spaceIndex.clear();
 		dateIndex.clear();
 		
-//		HashMap<String, DateEntry> list;
+		//display all dates
 		if( MainWindow.emptyDates ){
 			for(int j = 0 ; j < MainWindow.maxEntries ; j++ ){
 				Entry currentDay = new Entry(currentDate);
 				m.add(i, currentDay.getName());
 				dateIndex.put(i++, currentDate);
+				if( colorDay(Entry.getDayOfWeek()) )
+					colorList.add(i - 1);
 				if( dateList.containsKey(currentDay.getDate())){
 
 					for(DateEntry b: dateList.get(currentDay.getDate()).getList().values()){
@@ -162,25 +187,26 @@ public class Lister extends JScrollPane{
 				currentDate = Entry.getToday();
 			}
 		} else {
+			
+		//display only dates with events	
 		//retrieve and add date to jlist, record the index of the date
-		for(Entry a: dateList.values()){
-			dateIndex.put(i, a.getName());
-			m.add(i++, a.getName());
-			
-			//retrieve date's event list and add to jlist
-			for(DateEntry b: a.getList().values()){
-				m.add(i++, b.getTitle());
-//				spaceIndex.remove(i);
-//				dateIndex.remove(i);
+			for(Entry a: dateList.values()){
+				colorList.clear();
+				dateIndex.put(i, a.getName());
+				m.add(i++, a.getName());
+
+				//retrieve date's event list and add to jlist
+				for(DateEntry b: a.getList().values()){
+					m.add(i++, b.getTitle());
+				}
+
+				//add space at the end of a date and record the index
+				spaceIndex.add(i);
+				m.add(i++, " ");
 			}
-			
-			//add space at the end of a date and record the index
-			spaceIndex.add(i);
-			m.add(i++, " ");
-		}
 		}
 		list.setModel(m);
-		
+
 	}
 	
 	public void updateDateNames(){
@@ -215,14 +241,24 @@ public class Lister extends JScrollPane{
 			
 			//display information for titles
 			if( !dateIndex.containsKey(index) && !spaceIndex.contains(index) ){
+				
 				setFont(titleFont);
 				setText(indent + textValue);
 			
 			//display information for dates
 			} else if ( dateIndex.containsKey(index) ){
+				
+				//change date color if needed
+				if(colorList.contains(index) )
+					setForeground(Color.RED);
+				else
+					setForeground(Color.BLACK);
+				
 				setFont(dateFont);
 				setText(textValue);
 			} else
+				
+				//empty space at the end of events
 				setText(textValue);
 			
 			if( isSelected ){
