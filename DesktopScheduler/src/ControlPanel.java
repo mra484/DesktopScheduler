@@ -38,10 +38,11 @@ public class ControlPanel extends JPanel{
 	private FileHandler filer;
 	private MainWindow mainWindow;
 	private DialogWindow optionWindow = null;
-	
+
 	private JButton add = new JButton("New Entry");
-	private JButton delete = new JButton("Delete Selected Entry");
-	private JButton option = new JButton("O");
+	private JButton repeat = new JButton("New Repeating Entry");
+	private JButton delete = new JButton("Delete Entry");
+	private JButton option = new JButton("Options");
 	private JTextField date = new JTextField();
 	private JTextField title = new JTextField();
 	private JTextArea memo = new JTextArea(4, 4);
@@ -100,6 +101,7 @@ public class ControlPanel extends JPanel{
 		setLayout(new GridBagLayout());
 		arrange();
 		add.addActionListener(action);
+		repeat.addActionListener(action);
 		delete.addActionListener(action);
 		option.addActionListener(action);
 	}
@@ -136,60 +138,71 @@ public class ControlPanel extends JPanel{
 		optionWindow.update();
 	}
 	public void arrange(){
+		int xPos = 0;
+		int yPos = 0;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.gridx = 0;
-		c.gridy = 0;
+		c.gridx = yPos;
+		c.gridy = yPos;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.insets = new Insets(0,0,10,0);
 		add(status, c);
-		
+
 		//add button
+		c.insets = new Insets(0,0,0,0);
 		c.gridwidth = 1;
-		c.gridx = 0;
-		c.gridy = 1;
+		c.gridx = xPos;
+		c.gridy = ++yPos;
 		add(add, c);
 		
+		//add repeat button
+		c.gridwidth = 1;
+		c.gridx = ++xPos;
+		c.gridy = yPos;
+		add(repeat, c);
+		
 		//delete button
-		c.gridx = 1;
+		c.insets = new Insets(0,0,10,0);
+		c.gridy = ++yPos;
+		c.gridx = (xPos=0);;
 		add(delete, c);
 		
 		//option button
-		c.gridx = 2;
+		c.gridx = ++xPos;
 		add(option, c);
 		
 		//date label
 		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(0,0,0,0);
-		c.gridy = 2;
-		c.gridx = 0;
+		c.gridy = ++yPos;
+		c.gridx = (xPos=0);;
 		c.gridwidth = 1;
 		add(dateLabel, c);
 		
 		//date field
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = ++xPos;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		add(date, c);
 		
 		//title label
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.gridx = (xPos=0);;
+		c.gridy = ++yPos;
+//		c.gridwidth = GridBagConstraints.REMAINDER;
 		add(titleLabel, c);
 		
 		//title field
-		c.gridy = 4;
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridy = ++yPos;
+//		c.fill = GridBagConstraints.HORIZONTAL;
 		add(title, c);
 		
 		//memo label
-		c.gridy = 5;
-		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.gridy = ++yPos;
+//		c.gridwidth = GridBagConstraints.REMAINDER;
 		add(memoLabel, c);
 		
 		//memo field
-		c.gridy = 6;
+		c.gridy = ++yPos;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.fill = GridBagConstraints.BOTH;
 		add(memoArea, c);
