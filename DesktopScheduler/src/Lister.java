@@ -46,7 +46,7 @@ public class Lister extends JScrollPane{
 	
 	//contains a list of dates with events
 	private TreeMap<Integer, Entry> dateList = new TreeMap<Integer, Entry>(); 
-//	private HashMap<Integer, Entry> dateList = new HashMap<Integer, Entry>(); 
+	private TreeMap<Integer, Entry> repeatList = new TreeMap<Integer, Entry>();
 	private JList<String> list;
 	
 	//contains a list of indexes containing a date or a space
@@ -91,6 +91,25 @@ public class Lister extends JScrollPane{
 		
 		//retrieve date entry object and add the current information to it
 		current.add(data, memo);
+		updateList();
+		return true;		
+		} catch (ArrayIndexOutOfBoundsException e) {
+			control.setStatus(ControlPanel.STATUS_MISS_DATE);
+			return false;
+		}
+	}
+	
+	public boolean addRep(int day, String data, String memo, int interval){
+		try{
+		Entry current = new Entry(day);
+		//create new date entry if not present
+		if( !repeatList.containsKey(current.getDate()) ){
+			repeatList.put(current.getDate(), current);
+		}else 
+			current = repeatList.get(current.getDate());
+		
+		//retrieve date entry object and add the current information to it
+		current.addRep(day, data, memo, interval);
 		updateList();
 		return true;		
 		} catch (ArrayIndexOutOfBoundsException e) {

@@ -5,11 +5,13 @@ public class Entry implements Comparable<Integer>{
 	
 	//data will be stored using the event title as a key for the the dataentry object
 	private HashMap<String, DateEntry> data = new HashMap<String, DateEntry>();
+	private HashMap<String, DateEntry> rep = new HashMap<String, DateEntry>();
 	private String[] dateList = {"January", "February", "March", "April", "May", "June", "July", "August",
 			"September", "October", "November", "December"};	
 	private int date;
 	private String dateName = "";
 	private String month = "";
+	private int repDays = 0;
 	private int day = 0;
 	private int year = 0;
 	public static int format = 0;
@@ -25,8 +27,15 @@ public class Entry implements Comparable<Integer>{
 		this.date = parseDate(date, 0);
 	}
 	
+	public Entry(int day){
+		repDays = day;
+	}
+
 	public void add(String title, String memo) {
 		data.put(title, new DateEntry(date, title, memo));
+	}
+	public void addRep(int day, String title, String memo, int interval) {
+		data.put(title, new DateEntry(day, title, memo, interval));
 	}
 	
 	public void remove(String info) {

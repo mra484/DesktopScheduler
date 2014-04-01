@@ -1,8 +1,11 @@
 
 public class DateEntry implements Comparable<DateEntry>{
 	private int date;
+	private int day;
 	private String title;
 	private String memo;
+	private int repeat = 0;
+	private int currentRep = 0;
 	
 	public DateEntry(int newDate, String newTitle, String newMemo){
 		if(newTitle.compareTo("") == 0)
@@ -12,6 +15,18 @@ public class DateEntry implements Comparable<DateEntry>{
 		date = newDate;
 		title = newTitle;
 		memo = newMemo;
+	}
+	
+	public DateEntry(int day, String newTitle, String newMemo, int interval){
+		if(newTitle.compareTo("") == 0)
+			newTitle = " ";
+		if(newMemo.compareTo("") == 0)
+			newMemo = " ";
+		this.day = day;
+		title = newTitle;
+		memo = newMemo;
+		repeat = interval;
+		currentRep = interval;
 	}
 	
 	public int getDate(){
