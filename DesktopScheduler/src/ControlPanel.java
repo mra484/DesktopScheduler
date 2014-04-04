@@ -230,6 +230,10 @@ public class ControlPanel extends JPanel{
 		updateControlPanel();
 		filer.saveData();
 	}
+	
+	public void addRep(int day, int interval){
+		list.addRep(day, title.getText(), memo.getText(), interval);
+	}
 
 	public void delete(){
 		//clear select history on delete

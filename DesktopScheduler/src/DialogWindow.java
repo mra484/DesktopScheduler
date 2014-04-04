@@ -39,6 +39,7 @@ public class DialogWindow extends JDialog{
 	public static final int DELETE_WINDOW = 0;
 	public static final int EDIT_WINDOW = 1;
 	public static final int OPTION_WINDOW = 2;
+	public static final int REPEAT_WINDOW = 3;
 	
 		private ControlPanel control;
 		private Actions actions = new Actions();
@@ -66,6 +67,11 @@ public class DialogWindow extends JDialog{
 		private JButton[] buttons = {new JButton("Yes"), new JButton("No")};
 		private JPanel buttonPanel = new JPanel();
 		private int option;
+		
+		//repeatable event window
+		private JLabel[] dayNames = {new JLabel("Su"), new JLabel("Mo"), new JLabel("Tu"), new JLabel("We"), 
+				new JLabel("Th"), new JLabel("Fr"), new JLabel("Sa")};
+		private JCheckBox[] dayBoxes;
 		
 		//option window constructor
 		public DialogWindow(MainWindow mainWindow){
@@ -109,6 +115,13 @@ public class DialogWindow extends JDialog{
 			setVisible(true);
 		}
 		
+		public DialogWindow(MainWindow mainWindow, ControlPanel controlPanel){
+			control = controlPanel;
+			setSize(230, 300);
+			option = REPEAT_WINDOW;
+			arrangeWindow();
+			
+		}
 		public void newString(String a){
 
 			questionString = a;
@@ -209,13 +222,33 @@ public class DialogWindow extends JDialog{
 				}
 				optionBoxes[0].setSelected(MainWindow.emptyDates);
 				optionBoxes[1].setSelected(MainWindow.deleteDialog);
+				
+			//day check boxes for repeat window
+			} else if ( option == REPEAT_WINDOW){
+				dayBoxes = new JCheckBox[dayBoxes.length];
+				for(i = 0 ; i < dayBoxes.length ; i++ ){
+					dayBoxes[i] = new JCheckBox();
+					dayBoxes[i].addActionListener(actions);
+				}
+				
 			}
+			
+
 			//adds action listener to buttons and adds buttons to panel
 			for( i = 0 ; i < buttons.length ; i++ ){
 				buttons[i].addActionListener(actions);
 				buttonPanel.add(buttons[i]);
 			}
-			
+		}
+		
+		private int getDay(){
+			int day = 0;
+			for( int i = 0 ; i < dayNames.length ; i++ ){
+				if( dayBoxes[i].isSelected() ){
+					day += (1 << i);
+				}
+			}
+			return day;
 		}
 		
 		private void createDateFormatBox(){
@@ -295,6 +328,17 @@ public class DialogWindow extends JDialog{
 						if( source == optionBoxes[i])
 							break;
 					}
+					
+					//get the index of the day box changed
+					//for now the dayBoxes does not need an action listener
+					if( i == optionNames.length){
+						for(i = 0 ; i < dayNames.length ; i++){
+							if( source == dayBoxes[i])
+								break;
+						}
+					}
+					
+					if( option == OPTION_WINDOW){
 					switch(i){
 					case 0:
 						//change in empty date checkbox
@@ -312,6 +356,7 @@ public class DialogWindow extends JDialog{
 					mainWindow.updateDateNames();
 					return;
 				}
+					
 				switch (option){
 				
 				case DELETE_WINDOW:
@@ -332,6 +377,10 @@ public class DialogWindow extends JDialog{
 					//hide option window on close
 					setVisible(false);
 					return;
+				
+				case REPEAT_WINDOW:
+					if( e.getSource() == buttons[0] )
+						control.addRep(getDay(), 1);
 				default:
 					break;
 				}
@@ -340,3 +389,4 @@ public class DialogWindow extends JDialog{
 		}
 		
 	}
+}
