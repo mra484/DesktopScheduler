@@ -28,6 +28,8 @@ import java.io.UnsupportedEncodingException;
 
 
 public class FileHandler {
+	public static final String SEPARATOR = "\ufffe";
+	public static final String LINEBREAK = "\uffff";
 	private FileInputStream iss;
 	private InputStreamReader isr;
 	private BufferedReader reader;
@@ -36,7 +38,6 @@ public class FileHandler {
 	private BufferedWriter writer;
 	private MainWindow main;
 	private Lister list;
-	private String separator = "=";
 	
 	public FileHandler(Lister a, MainWindow b){
 		main = b;
@@ -87,7 +88,7 @@ public class FileHandler {
 		try {
 			while(reader.ready()){
 				input = reader.readLine();
-				split = input.split(separator);
+				split = input.split(SEPARATOR);
 				
 				//for reading format in old versions of the program
 				if(split.length == 1)
@@ -112,7 +113,7 @@ public class FileHandler {
 					MainWindow.positionPref = Integer.parseInt(split[1]);
 					
 					input = reader.readLine();
-					split  = input.split(separator);
+					split  = input.split(SEPARATOR);
 					if(MainWindow.positionPref == MainWindow.CUSTOM_WINDOW){
 					main.setBounds(Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]),
 							Integer.parseInt(split[4]));
@@ -123,8 +124,11 @@ public class FileHandler {
 					MainWindow.deleteDialog = Boolean.parseBoolean(split[1]);
 				
 				//add event to list
-				else
-					list.add(split[0], split[1], split[2]);
+				else if( split.length == 3)
+				{
+					System.out.println("Contains " + LINEBREAK + " " + split[2].contains(LINEBREAK));
+					list.add(split[0], split[1], split[2].replace(LINEBREAK, "\r\n"));
+				}
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -141,29 +145,29 @@ public class FileHandler {
 	//write data to file
 	private void writeData(){
 		try {
-			writer.write(String.format("%s%s%s", "Date_Format", separator, Entry.format));
+			writer.write(String.format("%s%s%s", "Date_Format", SEPARATOR, Entry.format));
 			writer.newLine();
 
-			writer.write(String.format("%s%s%s", "Empty_Dates", separator, MainWindow.emptyDates));
+			writer.write(String.format("%s%s%s", "Empty_Dates", SEPARATOR, MainWindow.emptyDates));
 			writer.newLine();
 			
-			writer.write(String.format("%s%s%s%s%s", "Font_Sizes", separator, MainWindow.dateSize, separator,
+			writer.write(String.format("%s%s%s%s%s", "Font_Sizes", SEPARATOR, MainWindow.dateSize, SEPARATOR,
 					MainWindow.titleSize));
 			writer.newLine();
 			
-			writer.write(String.format("%s%s%s", "Confirm_Delete", separator, MainWindow.deleteDialog));
+			writer.write(String.format("%s%s%s", "Confirm_Delete", SEPARATOR, MainWindow.deleteDialog));
 			writer.newLine();
 			
-			writer.write(String.format("%s%s%s", "Position_Pref", separator, MainWindow.positionPref));
+			writer.write(String.format("%s%s%s", "Position_Pref", SEPARATOR, MainWindow.positionPref));
 			writer.newLine();
 			
-			writer.write(String.format("%s%s%s%s%s%s%s%s%s", "WindowXYWH", separator, main.getX(), separator,
-					main.getY(), separator, main.getWidth(), separator, main.getHeight()));
+			writer.write(String.format("%s%s%s%s%s%s%s%s%s", "WindowXYWH", SEPARATOR, main.getX(), SEPARATOR,
+					main.getY(), SEPARATOR, main.getWidth(), SEPARATOR, main.getHeight()));
 			writer.newLine();
 			
 			for(Entry a: list.getList().values()){
 				for(DateEntry b: a.getList().values()){
-					writer.write(String.format("%s%s%s", a.getName(), separator, b));
+					writer.write(String.format("%s%s%s", a.getName(), SEPARATOR, b.toOut()));
 					writer.newLine();
 				}
 			}

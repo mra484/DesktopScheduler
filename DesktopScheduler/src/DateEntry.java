@@ -27,11 +27,16 @@ public class DateEntry implements Comparable<DateEntry>{
 	}
 	
 	public String getMemo(){
-		return memo;
+		return memo.replace(FileHandler.LINEBREAK, "\r\n");
+	}
+
+	public String toString(){
+		return title + FileHandler.SEPARATOR + memo;
 	}
 	
-	public String toString(){
-		return title + "=" + memo;
+	public String toOut(){
+		memo = memo.replace("\n", FileHandler.LINEBREAK).replace("\r", "");
+		return title + FileHandler.SEPARATOR + memo;
 	}
 
 	@Override
