@@ -38,6 +38,7 @@ public class FileHandler {
 	private BufferedWriter writer;
 	private MainWindow main;
 	private Lister list;
+	private String oldSeparator = "=";
 	
 	public FileHandler(Lister a, MainWindow b){
 		main = b;
@@ -90,12 +91,22 @@ public class FileHandler {
 				input = reader.readLine();
 				split = input.split(SEPARATOR);
 				
-				//for reading format in old versions of the program
+				/***************for handling old versions of data files**************/
 				if(split.length == 1)
-					Entry.format = Integer.parseInt(split[0]);
+				{
+					//try using old separator =
+					split = split[0].split(oldSeparator);
+					
+					//read format if still no separator found
+					if(split.length == 1)
+					{
+						Entry.format = Integer.parseInt(split[0]);
+						break;
+					}
+				}
 				
 				//read font sizes
-				else if(split[0].compareTo("Font_Sizes") == 0 ){
+				if(split[0].compareTo("Font_Sizes") == 0 ){
 					MainWindow.dateSize = Integer.parseInt(split[1]);
 					MainWindow.titleSize = Integer.parseInt(split[2]);
 				}
@@ -114,6 +125,11 @@ public class FileHandler {
 					
 					input = reader.readLine();
 					split  = input.split(SEPARATOR);
+					
+					/******************** handle old file separator type ***********************/
+					if(split.length == 1)
+						split = split[0].split(oldSeparator);
+					
 					if(MainWindow.positionPref == MainWindow.CUSTOM_WINDOW){
 					main.setBounds(Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]),
 							Integer.parseInt(split[4]));
